@@ -1,0 +1,6 @@
+Hacer controladores (CRUD)
+- Roles
+- Permisos
+- Marca
+- Producto
+- ShoppingCard

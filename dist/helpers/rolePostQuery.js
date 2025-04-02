@@ -9,21 +9,23 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = require("express");
-const userController_1 = require("../controller/userController");
-const rolesController_1 = require("../controller/rolesController");
-const start = (request, response) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        response.json({ API: 'vinoteca' });
-    }
-    catch (error) {
-        response.json(500).send({ msg: 'ERROR' });
-    }
-});
-const router = (0, express_1.Router)();
-// Rutas
-router.get('/', start);
-router.post('/creadUser', userController_1.creadUser);
-router.get('/readUsers', userController_1.readUsers);
-router.post('/creadRole', rolesController_1.creadRole);
-module.exports = router;
+exports.creadRoleQuery = void 0;
+const database_1 = require("../database/database");
+const creadRoleQuery = (data) => {
+    return new Promise((resolve, reject) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const { name } = data;
+            yield database_1.database.role.create({
+                data: {
+                    Name: name
+                }
+            });
+            resolve(true);
+        }
+        catch (error) {
+            console.error('Error creadRoleQuery');
+            reject(false);
+        }
+    }));
+};
+exports.creadRoleQuery = creadRoleQuery;

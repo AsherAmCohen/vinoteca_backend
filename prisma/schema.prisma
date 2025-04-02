@@ -1,0 +1,174 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  Id                   Int                    @id @default(autoincrement())
+  Name                 String                 @unique(map: "Name") @db.VarChar(45)
+  Description          String?                @db.VarChar(100)
+  Category_has_Product Category_has_Product[]
+}
+
+model Category_has_Product {
+  Id          Int      @id @default(autoincrement())
+  Category_Id Int
+  Product_Id  Int
+  Category    Category @relation(fields: [Category_Id], references: [Id], onDelete: Cascade, onUpdate: NoAction, map: "Category_has_Product_ibfk_1")
+  Product     Product  @relation(fields: [Product_Id], references: [Id], onDelete: Cascade, onUpdate: NoAction, map: "Category_has_Product_ibfk_2")
+
+  @@index([Category_Id], map: "Category_Id")
+  @@index([Product_Id], map: "Product_Id")
+}
+
+model Mark {
+  Id          Int       @id @default(autoincrement())
+  Name        String    @unique(map: "Name") @db.VarChar(45)
+  Description String?   @db.VarChar(100)
+  Product     Product[]
+}
+
+model Order {
+  Id                Int                 @id @default(autoincrement())
+  ShoppingCart_Id   Int
+  Status            Order_Status?       @default(pending)
+  CreatedAt         DateTime?           @default(now()) @db.DateTime(0)
+  ShoppingCart      ShoppingCart        @relation(fields: [ShoppingCart_Id], references: [Id], onDelete: Cascade, onUpdate: NoAction, map: "Order_ibfk_1")
+  Product_has_Order Product_has_Order[]
+
+  @@index([ShoppingCart_Id], map: "ShoppingCart_Id")
+}
+
+model Permission {
+  Id                  Int                   @id @default(autoincrement())
+  Name                String                @unique(map: "Name") @db.VarChar(45)
+  Description         String?               @db.VarChar(100)
+  Role_has_Permission Role_has_Permission[]
+}
+
+model Product {
+  Id                       Int                        @id @default(autoincrement())
+  Name                     String                     @db.VarChar(100)
+  Description              String?                    @db.VarChar(255)
+  Price                    Decimal                    @db.Decimal(10, 2)
+  Image                    String?                    @db.Text
+  Stock                    Int                        @default(0)
+  Sale                     Int?                       @default(0)
+  Mark_Id                  Int?
+  Category_has_Product     Category_has_Product[]
+  Mark                     Mark?                      @relation(fields: [Mark_Id], references: [Id], map: "Product_ibfk_1")
+  Product_has_Order        Product_has_Order[]
+  Rating                   Rating[]
+  ShoppingCart_has_Product ShoppingCart_has_Product[]
+
+  @@index([Mark_Id], map: "Mark_Id")
+}
+
+model Product_has_Order {
+  Id         Int     @id @default(autoincrement())
+  Product_Id Int
+  Order_Id   Int
+  Quantity   Int     @default(1)
+  Product    Product @relation(fields: [Product_Id], references: [Id], onDelete: Cascade, onUpdate: NoAction, map: "Product_has_Order_ibfk_1")
+  Order      Order   @relation(fields: [Order_Id], references: [Id], onDelete: Cascade, onUpdate: NoAction, map: "Product_has_Order_ibfk_2")
+
+  @@index([Order_Id], map: "Order_Id")
+  @@index([Product_Id], map: "Product_Id")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model Rating {
+  Id         Int       @id @default(autoincrement())
+  Rating     Int?
+  Comment    String?   @db.VarChar(255)
+  Product_Id Int
+  User_Id    Int
+  CreatedAt  DateTime? @default(now()) @db.DateTime(0)
+  Product    Product   @relation(fields: [Product_Id], references: [Id], onDelete: Cascade, onUpdate: NoAction, map: "Rating_ibfk_1")
+  User       User      @relation(fields: [User_Id], references: [Id], onDelete: Cascade, onUpdate: NoAction, map: "Rating_ibfk_2")
+
+  @@index([Product_Id], map: "Product_Id")
+  @@index([User_Id], map: "User_Id")
+}
+
+model Role {
+  Id                  Int                   @id @default(autoincrement())
+  Name                String                @unique(map: "Name") @db.VarChar(45)
+  Role_has_Permission Role_has_Permission[]
+  User                User[]
+}
+
+model Role_has_Permission {
+  Id            Int        @id @default(autoincrement())
+  Role_Id       Int
+  Permission_Id Int
+  Role          Role       @relation(fields: [Role_Id], references: [Id], onDelete: Cascade, onUpdate: NoAction, map: "Role_has_Permission_ibfk_1")
+  Permission    Permission @relation(fields: [Permission_Id], references: [Id], onDelete: Cascade, onUpdate: NoAction, map: "Role_has_Permission_ibfk_2")
+
+  @@index([Permission_Id], map: "Permission_Id")
+  @@index([Role_Id], map: "Role_Id")
+}
+
+model ShoppingCart {
+  Id                       Int                        @id @default(autoincrement())
+  User_Id                  Int
+  Status                   ShoppingCart_Status?       @default(active)
+  CreatedAt                DateTime?                  @default(now()) @db.DateTime(0)
+  Order                    Order[]
+  User                     User                       @relation(fields: [User_Id], references: [Id], onDelete: Cascade, onUpdate: NoAction, map: "ShoppingCart_ibfk_1")
+  ShoppingCart_has_Product ShoppingCart_has_Product[]
+
+  @@index([User_Id], map: "User_Id")
+}
+
+model ShoppingCart_has_Product {
+  Id              Int          @id @default(autoincrement())
+  ShoppingCart_Id Int
+  Product_Id      Int
+  Quantity        Int          @default(1)
+  ShoppingCart    ShoppingCart @relation(fields: [ShoppingCart_Id], references: [Id], onDelete: Cascade, onUpdate: NoAction, map: "ShoppingCart_has_Product_ibfk_1")
+  Product         Product      @relation(fields: [Product_Id], references: [Id], onDelete: Cascade, onUpdate: NoAction, map: "ShoppingCart_has_Product_ibfk_2")
+
+  @@index([Product_Id], map: "Product_Id")
+  @@index([ShoppingCart_Id], map: "ShoppingCart_Id")
+}
+
+model User {
+  Id           Int            @id @default(autoincrement())
+  Name         String?        @db.VarChar(45)
+  Lastname     String?        @db.VarChar(45)
+  Password     String         @db.Text
+  Gender       String?        @db.VarChar(45)
+  Email        String?        @unique(map: "Email") @db.VarChar(45)
+  Address      String?        @db.VarChar(100)
+  Phone        String?        @db.VarChar(10)
+  Birthdate    DateTime?      @db.Date
+  CreatedAt    DateTime?      @default(now()) @db.DateTime(0)
+  VerifiedAt   DateTime?      @db.DateTime(0)
+  DeletedAt    DateTime?      @db.DateTime(0)
+  UpdatedAt    DateTime?      @db.DateTime(0)
+  Role_Id      Int
+  Rating       Rating[]
+  ShoppingCart ShoppingCart[]
+  Role         Role           @relation(fields: [Role_Id], references: [Id], map: "User_ibfk_1")
+
+  @@index([Role_Id], map: "Role_Id")
+}
+
+enum ShoppingCart_Status {
+  active
+  abandoned
+  completed
+}
+
+enum Order_Status {
+  pending
+  paid
+  shipped
+  delivered
+  cancelled
+}

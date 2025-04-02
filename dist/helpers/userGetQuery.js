@@ -9,21 +9,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = require("express");
-const userController_1 = require("../controller/userController");
-const rolesController_1 = require("../controller/rolesController");
-const start = (request, response) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        response.json({ API: 'vinoteca' });
-    }
-    catch (error) {
-        response.json(500).send({ msg: 'ERROR' });
-    }
-});
-const router = (0, express_1.Router)();
-// Rutas
-router.get('/', start);
-router.post('/creadUser', userController_1.creadUser);
-router.get('/readUsers', userController_1.readUsers);
-router.post('/creadRole', rolesController_1.creadRole);
-module.exports = router;
+exports.readUsersQuery = void 0;
+// Librerias
+const database_1 = require("../database/database");
+// Obtener los usuarios de la base de datos
+const readUsersQuery = () => {
+    return new Promise((resolve, reject) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const Users = yield database_1.database.user.findMany({});
+            resolve(Users);
+        }
+        catch (error) {
+            console.log('ERROR ReadUsersQuery');
+            reject(false);
+        }
+    }));
+};
+exports.readUsersQuery = readUsersQuery;

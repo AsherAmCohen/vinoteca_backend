@@ -9,21 +9,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = require("express");
-const userController_1 = require("../controller/userController");
-const rolesController_1 = require("../controller/rolesController");
-const start = (request, response) => __awaiter(void 0, void 0, void 0, function* () {
+exports.creadRole = void 0;
+const rolePostQuery_1 = require("../helpers/rolePostQuery");
+const creadRole = (request, response) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        response.json({ API: 'vinoteca' });
+        const data = request.body;
+        yield (0, rolePostQuery_1.creadRoleQuery)(data);
+        response.json('Role creado');
     }
-    catch (error) {
-        response.json(500).send({ msg: 'ERROR' });
+    catch (_a) {
+        response.status(500).send({ msg: 'ERROR: No se ha creado el role' });
     }
 });
-const router = (0, express_1.Router)();
-// Rutas
-router.get('/', start);
-router.post('/creadUser', userController_1.creadUser);
-router.get('/readUsers', userController_1.readUsers);
-router.post('/creadRole', rolesController_1.creadRole);
-module.exports = router;
+exports.creadRole = creadRole;
