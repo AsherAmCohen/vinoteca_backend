@@ -1,7 +1,7 @@
 import { database } from "../database/database"
 
 interface creadShoppingcardProps {
-    status: string
+    status: any
 }
 
 export const creadShoppingcardQuery = (data: creadShoppingcardProps) => {
@@ -11,9 +11,10 @@ export const creadShoppingcardQuery = (data: creadShoppingcardProps) => {
                 status
             } = data
 
-            await database.Shoppingcard.create({
+            await database.shoppingCart.create({
                 data: {
-                    status: status
+                    Status: status,
+                    User_Id: 1,
                 }
             })
 

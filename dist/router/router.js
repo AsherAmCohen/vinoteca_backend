@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const userController_1 = require("../controller/userController");
 const rolesController_1 = require("../controller/rolesController");
+const productController_1 = require("../controller/productController");
 const start = (request, response) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         response.json({ API: 'vinoteca' });
@@ -26,4 +27,8 @@ router.get('/', start);
 router.post('/creadUser', userController_1.creadUser);
 router.get('/readUsers', userController_1.readUsers);
 router.post('/creadRole', rolesController_1.creadRole);
+router.post('/creadProduct', productController_1.creadProduct);
+router.get('/readProducts', productController_1.readProducts);
+router.put('/updateProduct', productController_1.updateProduct);
+router.delete('/deleteProduct', productController_1.deleteProduct);
 module.exports = router;

@@ -1,6 +1,15 @@
-Hacer controladores (CRUD)
-- Roles
-- Permisos
-- Marca
-- Producto
+Hacer controladores 
+- Roles (Falta READ)
+- Permisos (Falta READ)
+- Marca (Colocar el nombre de las funciones en ingles, Falta READ)
+- Producto (Listo)
+- ShoppingCard (FALTA READ)
+
+05/04/2025
+Agregar READ, UPDATE y DELETE a cada uno de los controladores
+- User
+- Role
+- Permission
+- Mark
+- Product
 - ShoppingCard

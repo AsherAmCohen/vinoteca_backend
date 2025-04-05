@@ -13,10 +13,10 @@ export const creadPermisosQuery = (data: creadPermisosProps) => {
                 description
             } = data
 
-            await database.permisos.create({
+            await database.permission.create({
                 data: {
                     Name: name,
-                    description: description
+                    Description: description
                 }
             })
 

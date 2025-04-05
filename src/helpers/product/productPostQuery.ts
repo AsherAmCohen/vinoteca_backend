@@ -1,28 +1,34 @@
-import { database } from "../database/database";
+import { database } from "../../database/database";
 
 interface postCreadProductoProps {
     name: string;
     description: string;
+    price: number;
     image: string;
-    stock: string;
+    stock: number;
+    sale: number;
 }
 
-export const creadProductoQuery = (data: postCreadProductoProps) => {
+export const creadProductQuery = (data: postCreadProductoProps) => {
     return new Promise(async(resolve, reject) => {
         try {
             const {
                 name,
                 description,
+                price,
                 image,
-                stock
+                stock,
+                sale
             } = data
 
-            await database.producto.create({
+            await database.product.create({
                 data: {
                     Name: name,
-                    description: description,
-                    image: image,
-                    stock: stock,
+                    Description: description,
+                    Price: price,
+                    Image: image,
+                    Stock: stock,
+                    Sale: sale
                 }
             })
 

@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import { creadMarcaQuery } from "../helpers/marcaPostQuery";
+import { creadMarcaQuery } from "../helpers/mark/marcaPostQuery";
 
 export const creadMarca: RequestHandler = async(request, response) => {
     try {

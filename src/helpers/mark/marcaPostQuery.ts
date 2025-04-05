@@ -1,4 +1,4 @@
-import { database } from "../database/database"
+import { database } from "../../database/database"
 
 interface creadMarcaProps {
     name: string
@@ -13,10 +13,10 @@ export const creadMarcaQuery = (data: creadMarcaProps) => {
                 description
             } = data
 
-            await database.marca.create({
+            await database.mark.create({
                 data: {
                     Name: name,
-                    description: description
+                    Description: description
                 }
             })
 
