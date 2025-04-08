@@ -1,0 +1,51 @@
+// userPostQuery.ts
+import { database } from "../../database/database";
+
+interface postCreateUserProps {
+    name: string;
+    lastname: string;
+    password: string;
+    gender: string;
+    email: string;
+    address: string;
+    phone: string;
+    birthdate: string;
+    roleId: number;
+}
+
+export const postCreadUser = (data: postCreateUserProps) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const {
+                name,
+                lastname,
+                password,
+                gender,
+                email,
+                address,
+                phone,
+                birthdate,
+                roleId
+            } = data;
+
+            await database.user.create({
+                data: {
+                    Name: name,
+                    Lastname: lastname,
+                    Password: password,
+                    Gender: gender,
+                    Email: email,
+                    Address: address,
+                    Phone: phone,
+                    Birthdate: birthdate,
+                    Role_Id: roleId
+                }
+            });
+
+            resolve(true);
+        } catch (error) {
+            console.error('Error in postCreadUser');
+            reject(false);
+        }
+    });
+};
