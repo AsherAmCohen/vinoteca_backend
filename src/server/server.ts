@@ -40,7 +40,7 @@ export class server{
     }
 
     settingRouters(){
-        const apirouter=require('../router/router');
+        const apirouter=require('../routes/routes');
         this.app.use('/', apirouter);
     }
 

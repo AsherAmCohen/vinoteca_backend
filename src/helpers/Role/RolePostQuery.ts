@@ -1,22 +1,22 @@
-import { database } from "../../database/database";
+// import { database } from "../../database/database";
 
-interface postCreateRoleProps {
-    name: string;
-}
+// interface postCreateRoleProps {
+//     name: string;
+// }
 
-export const createRoleQuery = (data: postCreateRoleProps) => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            const { name } = data;
+// export const createRoleQuery = (data: postCreateRoleProps) => {
+//     return new Promise(async (resolve, reject) => {
+//         try {
+//             const { name } = data;
 
-            await database.role.create({
-                data: { Name: name }
-            });
+//             await database.role.create({
+//                 data: { Name: name }
+//             });
 
-            resolve(true);
-        } catch (error) {
-            console.error('Error postCreateRole');
-            reject(false);
-        }
-    });
-};
+//             resolve(true);
+//         } catch (error) {
+//             console.error('Error postCreateRole');
+//             reject(false);
+//         }
+//     });
+// };

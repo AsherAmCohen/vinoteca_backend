@@ -1,3 +1,5 @@
 node_modules/
 .env
 log/bitacora.log
+dist/
+prisma/migrations
