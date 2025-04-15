@@ -19,3 +19,8 @@ export interface SignUpQueryProps {
     birthdate: Date;
     password: string;
 }
+
+export interface SignInServiceProps {
+    email: string;
+    password: string;
+}

@@ -12,7 +12,7 @@ export const CheckEmailQuery = (email: string) => {
             })
 
             if (EmailExists) {
-                resolve(true)
+                resolve(EmailExists)
             } else {
                 resolve(false)
             }

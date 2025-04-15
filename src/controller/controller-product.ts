@@ -1,3 +1,29 @@
+import { RequestHandler } from "express";
+
+const products = [
+    {
+        id: 1,
+        name: 'Vino',
+        price: '3$'
+    }, {
+        id: 2,
+        name: 'Licor',
+        price: '3$'
+    } , {
+        id: 3,
+        name: 'Licor',
+        price: '3$'
+    }
+]
+
+export const getProducts: RequestHandler = async(request, response) => {
+    try {
+        response.send(products)
+    } catch {
+        response.status(500).send({status: 'error', msg: 'No se ha podido obtener los datos del producto', data: ''})
+    }
+}
+
 // import { RequestHandler, response } from "express";
 // import { creadProductQuery } from "../helpers/product/productPostQuery";
 // import { readProductsQuery } from "../helpers/product/productGetQuery";

@@ -1,13 +1,21 @@
 import { RequestHandler } from "express";
-import { CreateService } from "../services/services-user";
+import { SignInService, SignUpService } from "../services/services-user";
 
-// CREATE
 export const SignUpController: RequestHandler = async (request, response) => {
     try {
-        await CreateService(request.body)
+        await SignUpService(request.body)
         response.json({ status: 'success', msg: 'Usuario creado', data: '' })
     } catch (error: any) {
         response.status(500).send({ status: 'error', msg: error.message || 'No se ha creado el usuario', data: '' })
+    }
+}
+
+export const SignInController: RequestHandler = async (request, response) => {
+    try {
+        const user = await SignInService(request.body)
+        response.json({ status: 'success', msg: 'Usuario existente', data: user })
+    } catch (error: any) {
+        response.status(500).send({ status: 'error', msg: error.message || 'No se ha podido iniciar sesión', data: '' })
     }
 }
 
