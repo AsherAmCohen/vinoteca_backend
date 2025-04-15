@@ -1,9 +1,9 @@
 import { CheckEmailQuery } from "../helpers/User/query-get-user";
-import { CreateQuery } from "../helpers/User/query-post-user";
-import { CreateServiceProps } from "../interfaces/interfaces-user"
+import { SignUpQuery } from "../helpers/User/query-post-user";
 import bcrypt from 'bcrypt';
+import { SignUpServiceProps } from "../interfaces/interfaces-user";
 
-export async function CreateService(data: CreateServiceProps) {
+export async function CreateService(data: SignUpServiceProps) {
     let { email, password, birthdate, phone, ...rest } = data;
 
     // Comprobar si el correo ya fue registrado
@@ -31,7 +31,7 @@ export async function CreateService(data: CreateServiceProps) {
         lastname: data.lastname.toUpperCase(),
     };
 
-    await CreateQuery({
+    await SignUpQuery({
         ...uppercasedData,
         email: uppercasedData.email,
         phone: phoneFormatted,

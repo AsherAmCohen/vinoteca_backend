@@ -1,7 +1,7 @@
 import { database } from "../../database/database"
-import { CreateQueryProps } from "../../interfaces/interfaces-user"
+import { SignUpQueryProps } from "../../interfaces/interfaces-user"
 
-export const CreateQuery = (data: CreateQueryProps) => {
+export const SignUpQuery = (data: SignUpQueryProps) => {
     return new Promise(async(resolve, reject) => {
         try {
             console.log(data)

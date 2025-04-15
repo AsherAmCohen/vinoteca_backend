@@ -1,11 +1,8 @@
 import { RequestHandler } from "express";
-import { CreateQuery } from "../helpers/User/query-post-user";
-import { CheckEmailQuery } from "../helpers/User/query-get-user";
-import bcrypt from 'bcrypt';
 import { CreateService } from "../services/services-user";
 
 // CREATE
-export const CreateController: RequestHandler = async (request, response) => {
+export const SignUpController: RequestHandler = async (request, response) => {
     try {
         await CreateService(request.body)
         response.json({ status: 'success', msg: 'Usuario creado', data: '' })
@@ -14,6 +11,7 @@ export const CreateController: RequestHandler = async (request, response) => {
     }
 }
 
+// READ
 // // READ
 // // // Obtener usuarios
 // // export const readUsers: RequestHandler = async (request, response) => {

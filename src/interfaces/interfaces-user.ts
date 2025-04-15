@@ -1,4 +1,4 @@
-export interface CreateServiceProps {
+export interface SignUpServiceProps {
     name: string;
     lastname: string;
     gender: string;
@@ -9,7 +9,7 @@ export interface CreateServiceProps {
     password: string;
 }
 
-export interface CreateQueryProps {
+export interface SignUpQueryProps {
     name: string;
     lastname: string;
     gender: string;
