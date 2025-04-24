@@ -15,7 +15,15 @@ export const SignInController: RequestHandler = async (request, response) => {
         const user = await SignInService(request.body)
         response.json({ status: 'success', msg: 'Usuario existente', data: user })
     } catch (error: any) {
-        response.status(500).send({ status: 'error', msg: error.message || 'No se ha podido iniciar sesión', data: '' })
+        response.status(500).send({ status: 'error', msg: error.message || 'No se ha podido iniciar sesión, vuelve a intentarlo mas tarde', data: '' })
+    }
+}
+
+export const UserInformationController: RequestHandler = async(request, response) => {
+    try {
+
+    } catch (error: any) {
+        response.status(500).send({ status: 'error', msg: error.message || 'No se ha podido obtener la información del usuario', data: ''})
     }
 }
 

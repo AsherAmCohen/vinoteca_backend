@@ -16,7 +16,7 @@ export async function SignUpService(data: SignUpServiceProps) {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Transformar la fecha de cumpleaños en un formato mas adecuado
-    const [day, month, year] = birthdate.split('/');
+    const [year, month, day] = birthdate.split('-');
     const birthDateFormatted = new Date(Number(year), Number(month) - 1, Number(day));
 
     // Dar formato al número telefonico
