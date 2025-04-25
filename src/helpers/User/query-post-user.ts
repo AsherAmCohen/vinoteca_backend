@@ -15,7 +15,7 @@ export const SignUpQuery = (data: SignUpQueryProps) => {
                     Email: email,
                     Address: address,
                     Phone: phone, 
-                    Birhdate: birthdate,
+                    Birthdate: birthdate,
                     Password: password
                 }
             })

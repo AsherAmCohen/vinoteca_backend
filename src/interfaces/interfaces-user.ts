@@ -24,3 +24,7 @@ export interface SignInServiceProps {
     email: string;
     password: string;
 }
+
+export interface UserInformationServiceProps {
+    email?: string;
+}

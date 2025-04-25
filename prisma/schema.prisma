@@ -15,7 +15,7 @@ model User {
   Email      String    @unique @db.VarChar(45)
   Address    String    @db.VarChar(100)
   Phone      Int
-  Birhdate   DateTime  @db.Date
+  Birthdate  DateTime  @db.Date
   Password   String    @db.Text
   CreatedAt  DateTime  @default(now()) @db.DateTime(0)
   VerifiedAt DateTime? @db.DateTime(0)

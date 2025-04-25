@@ -1,7 +1,7 @@
-import { CheckEmailQuery } from "../helpers/User/query-get-user";
+import { CheckEmailQuery, UserInformationQuery } from "../helpers/User/query-get-user";
 import { SignUpQuery } from "../helpers/User/query-post-user";
 import bcrypt from 'bcrypt';
-import { SignInServiceProps, SignUpServiceProps } from "../interfaces/interfaces-user";
+import { SignInServiceProps, SignUpServiceProps, UserInformationServiceProps } from "../interfaces/interfaces-user";
 import jwt from "jsonwebtoken"
 
 export async function SignUpService(data: SignUpServiceProps) {
@@ -41,7 +41,7 @@ export async function SignUpService(data: SignUpServiceProps) {
 }
 
 export async function SignInService(data: SignInServiceProps) {
-    let {email, password} = data;
+    let { email, password } = data;
 
     // Convertir correo en mayusculas para una mejor comparación
     email = email.toUpperCase();
@@ -49,19 +49,19 @@ export async function SignInService(data: SignInServiceProps) {
     // Comprobar si el usuario esta en la base de datos
     const user: any = await CheckEmailQuery(email)
 
-    if(!user) {
+    if (!user) {
         throw new Error('Correo electronicó no registrado')
     }
-    
+
     // Comparar contraseña
     const passwordMatch = await bcrypt.compare(password, user.Password)
 
-    if(!passwordMatch) {
+    if (!passwordMatch) {
         throw new Error('Contraseña incorrecta')
     }
 
     const SECRET_KEY = `${process.env.SECRET_KEY}`
-    
+
     // Generar JWT
     const token = jwt.sign({
         id: user.Id,
@@ -76,5 +76,45 @@ export async function SignInService(data: SignInServiceProps) {
         name: user.Name,
         email: user.Email,
         token
+    }
+}
+
+export async function UserInformationService(data: UserInformationServiceProps) {
+    let { email } = data
+
+    // Comprobar si se envio un correo
+    if (!email) {
+        throw new Error('No se ha recibido un correo electronico')
+    }
+
+    // Convertir el correo en mayusculas para facilitar la comparación
+    email = email.toUpperCase();
+
+    // Obtener la la información del usuario
+    const userInfo: any = await UserInformationQuery(email)
+
+    if (!userInfo) {
+        throw new Error('No se ha encontrado información del usuario')
+    }
+
+    // Convertir fecha a un formato mas legible
+    const fecha = new Date(userInfo.Birthdate)
+    const legible = fecha.toLocaleDateString("es-ES", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+        timeZone: 'UTC'
+    })
+
+    console.log(legible)
+
+    return {
+        name: userInfo.Name,
+        lastname: userInfo.Lastname,
+        gender: userInfo.Gender,
+        email: userInfo.Email,
+        address: userInfo.Address,
+        phone: userInfo.Phone,
+        birthdate: legible.toUpperCase()
     }
 }
