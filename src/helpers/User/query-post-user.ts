@@ -4,19 +4,18 @@ import { SignUpQueryProps } from "../../interfaces/interfaces-user"
 export const SignUpQuery = (data: SignUpQueryProps) => {
     return new Promise(async(resolve, reject) => {
         try {
-            console.log(data)
             const {name, lastname, gender, email, address, phone, birthdate, password} = data
             
             await database.user.create({
                 data: {
-                    Name: name,
-                    Lastname: lastname,
-                    Gender: gender,
-                    Email: email,
-                    Address: address,
-                    Phone: phone, 
-                    Birthdate: birthdate,
-                    Password: password
+                    name,
+                    lastname,
+                    gender,
+                    email,
+                    address,
+                    phone, 
+                    birthdate,
+                    password
                 }
             })
             resolve(true)

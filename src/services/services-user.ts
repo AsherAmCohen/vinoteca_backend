@@ -23,7 +23,7 @@ export async function SignUpService(data: SignUpServiceProps) {
     const phoneFormatted = parseInt(phone.replace(/\s+/g, ''));
 
     // Transformar en mayusculas para facilitar la comparación
-    const uppercasedData = {
+    const transformData = {
         ...rest,
         email: email.toUpperCase(),
         gender: data.gender.toUpperCase(),
@@ -33,7 +33,7 @@ export async function SignUpService(data: SignUpServiceProps) {
     };
 
     await SignUpQuery({
-        ...uppercasedData,
+        ...transformData,
         phone: phoneFormatted,
         birthdate: birthDateFormatted,
         password: hashedPassword,
@@ -105,8 +105,6 @@ export async function UserInformationService(data: UserInformationServiceProps) 
         year: "numeric",
         timeZone: 'UTC'
     })
-
-    console.log(legible)
 
     return {
         name: userInfo.Name,

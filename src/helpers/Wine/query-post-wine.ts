@@ -1,5 +1,29 @@
 // import { database } from "../../database/database";
 
+import { database } from "../../database/database";
+import { StoreWineQueryProps } from "../../interfaces/interfaces-wine";
+
+export const StoreWineQuery = (data: StoreWineQueryProps) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const { name, description, mark, price, stock, image } = data
+
+            await database.wine.create({
+                data: {
+                    name,
+                    description,
+                    price,
+                    stock,
+                    image
+                }
+            })
+            resolve(true)
+        } catch (error) {
+            reject(false)
+        }
+    })
+}
+
 // interface postCreadProductoProps {
 //     name: string;
 //     description: string;

@@ -30,7 +30,13 @@ export class server{
     }
 
     settingLogFile(){
-        let log=fs.createWriteStream(path.join(__dirname,'../../log/bitacora.log'),{flags:'a'});
+        // Crear la carpeta de log donde se almacenara la bitacora
+        const LogDir = path.join(__dirname, '../../log')
+        if(!fs.existsSync(LogDir)) {
+            fs.mkdirSync(LogDir)
+        }
+
+        const log = fs.createWriteStream(path.join(__dirname,'../../log/bitacora.log'),{flags:'a'});
         this.app.use(morgan('combined', {stream:log}));
     }
 

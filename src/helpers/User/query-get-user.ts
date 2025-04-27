@@ -7,7 +7,7 @@ export const CheckEmailQuery = (email: string) => {
         try {
             const EmailExists = await database.user.findUnique({
                 where: {
-                    Email: email
+                    email
                 }
             })
 
@@ -27,7 +27,7 @@ export const UserInformationQuery = (email: string) => {
         try {
             const user = await database.user.findUnique({
                 where: {
-                    Email: email
+                    email
                 }
             })
             

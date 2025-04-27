@@ -8,17 +8,27 @@ datasource db {
 }
 
 model User {
-  Id         Int       @id @default(autoincrement())
-  Name       String    @db.VarChar(45)
-  Lastname   String    @db.VarChar(45)
-  Gender     String    @db.VarChar(45)
-  Email      String    @unique @db.VarChar(45)
-  Address    String    @db.VarChar(100)
-  Phone      Int
-  Birthdate  DateTime  @db.Date
-  Password   String    @db.Text
-  CreatedAt  DateTime  @default(now()) @db.DateTime(0)
-  VerifiedAt DateTime? @db.DateTime(0)
-  UpdatedAt  DateTime? @db.DateTime(0)
-  DeletedAt  DateTime? @db.DateTime(0)
+  id         Int       @id @default(autoincrement())
+  name       String    @db.VarChar(45)
+  lastname   String    @db.VarChar(45)
+  gender     String    @db.VarChar(45)
+  email      String    @unique @db.VarChar(45)
+  address    String    @db.VarChar(100)
+  phone      Int
+  birthdate  DateTime  @db.Date
+  password   String    @db.Text
+  createdAt  DateTime  @default(now()) @db.DateTime(0)
+  verifiedAt DateTime? @db.DateTime(0)
+  updatedAt  DateTime? @db.DateTime(0)
+  deletedAt  DateTime? @db.DateTime(0)
+}
+
+model Wine {
+  id          Int     @id @default(autoincrement())
+  name        String  @db.VarChar(100)
+  description String  @db.VarChar(200)
+  price       Decimal @db.Decimal(10, 2)
+  stock       Float
+  sale        Int     @default(0)
+  image       String  @db.VarChar(100)
 }

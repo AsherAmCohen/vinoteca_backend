@@ -8,7 +8,6 @@ export const readUsersQuery = () => {
             const Users = await database.user.findMany({})
             resolve(Users)
         } catch (error) {
-            console.log('ERROR ReadUsersQuery')
             reject(false)
         }
     })
