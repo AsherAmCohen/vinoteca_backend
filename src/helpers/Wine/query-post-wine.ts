@@ -12,6 +12,7 @@ export const StoreWineQuery = (data: StoreWineQueryProps) => {
                 data: {
                     name,
                     description,
+                    markId: mark,
                     price,
                     stock,
                     image

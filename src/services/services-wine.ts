@@ -3,6 +3,7 @@ import { WinesQuery } from "../helpers/Wine/query-get-wine";
 import { StoreWineQuery } from "../helpers/Wine/query-post-wine";
 import { StoreWineServiceProps, WineImageServiceProps } from "../interfaces/interfaces-wine";
 import fs from 'fs';
+import { CreateMarkService } from "./services-mark";
 
 function formatEuro(num: number) {
     return '€' + num
@@ -11,9 +12,8 @@ function formatEuro(num: number) {
         .replace(/\B(?=(\d{3})+(?!\d))/g, '.'); // "1.234,56"
 }
 
-
-export async function StoreWineService(data: StoreWineServiceProps) {
-    let { price, ...rest } = data
+export const StoreWineService = async (data: StoreWineServiceProps) => {
+    let { price, name, mark, ...rest } = data
 
     // Cambiar el formato del precio
     price = price
@@ -23,11 +23,15 @@ export async function StoreWineService(data: StoreWineServiceProps) {
 
     const floatPrice = parseFloat(price)
 
+    // Obtener marca
+    const newMark: any = await CreateMarkService({mark})
+
     // Realizar las transformaciones necesarias
     const transformData = {
         ...rest,
-        name: data.name.toUpperCase(),
-        stock: Number(data.stock)
+        name: name.toUpperCase(),
+        stock: Number(data.stock),
+        mark: newMark.id
     }
 
     await StoreWineQuery({
@@ -37,16 +41,17 @@ export async function StoreWineService(data: StoreWineServiceProps) {
     })
 }
 
-export async function WinesService() {
+export const WinesService = async () => {
     const wines: any = await WinesQuery()
 
     const allWines: any = [];
 
     wines.map((wine: any) => {
-        const { price, ...rest } = wine
+        const { price, Mark, ...rest } = wine
         const Data = {
             ...rest,
-            price: formatEuro(price)
+            price: formatEuro(price),
+            mark: Mark.name
         }
 
         allWines.push(Data)
@@ -66,7 +71,7 @@ export async function WineImageService(props: WineImageServiceProps) {
     const uploadDir = path.resolve(__dirname, '../../uploads')
     const filePath = path.join(uploadDir, image)
 
-    if(!fs.existsSync(filePath)) {
+    if (!fs.existsSync(filePath)) {
         throw new Error('Imagen no encontrada')
     }
 

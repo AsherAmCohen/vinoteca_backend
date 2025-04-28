@@ -4,8 +4,8 @@ import bcrypt from 'bcrypt';
 import { SignInServiceProps, SignUpServiceProps, UserInformationServiceProps } from "../interfaces/interfaces-user";
 import jwt from "jsonwebtoken"
 
-export async function SignUpService(data: SignUpServiceProps) {
-    let { email, password, birthdate, phone, ...rest } = data;
+export const SignUpService = async (data: SignUpServiceProps) => {
+    let { email, password, birthdate, phone, gender, address, name, lastname, ...rest } = data;
 
     // Comprobar si el correo ya fue registrado
     if (await CheckEmailQuery(email.toUpperCase())) {
@@ -26,10 +26,10 @@ export async function SignUpService(data: SignUpServiceProps) {
     const transformData = {
         ...rest,
         email: email.toUpperCase(),
-        gender: data.gender.toUpperCase(),
-        address: data.address.toUpperCase(),
-        name: data.name.toUpperCase(),
-        lastname: data.lastname.toUpperCase(),
+        gender: gender.toUpperCase(),
+        address: address.toUpperCase(),
+        name: name.toUpperCase(),
+        lastname: lastname.toUpperCase(),
     };
 
     await SignUpQuery({
@@ -40,7 +40,7 @@ export async function SignUpService(data: SignUpServiceProps) {
     });
 }
 
-export async function SignInService(data: SignInServiceProps) {
+export const SignInService = async (data: SignInServiceProps) => {
     let { email, password } = data;
 
     // Convertir correo en mayusculas para una mejor comparación

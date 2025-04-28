@@ -9,7 +9,7 @@ export interface StoreWineServiceProps {
 export interface StoreWineQueryProps {
     name: string;
     description: string;
-    mark: string;
+    mark: number
     price: number;
     stock: number;
     image: string;

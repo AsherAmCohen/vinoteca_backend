@@ -6,6 +6,9 @@ export const WinesQuery = () => {
             const wines = database.wine.findMany({
                 orderBy: {
                     id: 'desc'
+                },
+                include: {
+                    Mark: true
                 }
             })
             resolve(wines)

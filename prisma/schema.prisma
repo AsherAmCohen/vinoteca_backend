@@ -31,4 +31,13 @@ model Wine {
   stock       Float
   sale        Int     @default(0)
   image       String  @db.VarChar(100)
+  // Marca
+  Mark        Mark?   @relation(fields: [markId], references: [id])
+  markId      Int
+}
+
+model Mark {
+  id    Int    @id @default(autoincrement())
+  name  String @db.VarChar(25) @unique
+  wines Wine[]
 }
