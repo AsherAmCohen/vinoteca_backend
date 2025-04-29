@@ -1,15 +1,27 @@
-export interface MarksServiceProps {
+export interface SearchMarksServiceProps {
     word?: string;
 }
 
-export interface MarksQueryProps {
+export interface SearchMarksQueryProps {
     word: string;
 }
 
 export interface CreateMarkServiceProps {
-    mark: string;
+    name: string;
+    description: string;
 }
 
 export interface CreateMarkQueryProps {
-    mark: string;
+    name: string;
+    description: string;
+}
+
+export interface MarksServiceProps {
+    page?: number;
+    rowsPerPage?: number;
+}
+
+export interface MarksQueryProps {
+    skip: number;
+    take: number;
 }

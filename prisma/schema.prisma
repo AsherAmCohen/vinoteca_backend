@@ -24,20 +24,21 @@ model User {
 }
 
 model Wine {
-  id          Int     @id @default(autoincrement())
-  name        String  @db.VarChar(100)
-  description String  @db.VarChar(200)
-  price       Decimal @db.Decimal(10, 2)
+  id          Int       @id @default(autoincrement())
+  name        String    @db.VarChar(100)
+  description String    @db.VarChar(200)
+  price       Decimal   @db.Decimal(10, 2)
   stock       Float
-  sale        Int     @default(0)
-  image       String  @db.VarChar(100)
+  sale        Int       @default(0)
+  image       String    @db.VarChar(100)
   // Marca
-  Mark        Mark?   @relation(fields: [markId], references: [id])
+  Mark        Mark?     @relation(fields: [markId], references: [id])
   markId      Int
 }
 
 model Mark {
-  id    Int    @id @default(autoincrement())
-  name  String @db.VarChar(25) @unique
-  wines Wine[]
+  id          Int    @id @default(autoincrement())
+  name        String @unique @db.VarChar(25)
+  description String @db.Text
+  wines       Wine[]
 }

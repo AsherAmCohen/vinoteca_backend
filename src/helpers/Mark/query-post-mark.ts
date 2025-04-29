@@ -4,16 +4,19 @@ import { CreateMarkQueryProps } from "../../interfaces/interfaces-mark"
 export const CreateMarkQuery = (data: CreateMarkQueryProps) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const { mark } = data;
+            const { name, description } = data;
 
             const newMark = await database.mark.upsert({
                 where: {
-                    name: mark
+                    name
                 },
                 create: {
-                    name: mark
+                    name,
+                    description
                 },
-                update: {}
+                update: {
+                    description
+                }
             })
 
             resolve(newMark)

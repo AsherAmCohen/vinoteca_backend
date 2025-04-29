@@ -23,15 +23,12 @@ export const StoreWineService = async (data: StoreWineServiceProps) => {
 
     const floatPrice = parseFloat(price)
 
-    // Obtener marca
-    const newMark: any = await CreateMarkService({mark})
-
     // Realizar las transformaciones necesarias
     const transformData = {
         ...rest,
         name: name.toUpperCase(),
         stock: Number(data.stock),
-        mark: newMark.id
+        mark: 1
     }
 
     await StoreWineQuery({

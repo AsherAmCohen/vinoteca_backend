@@ -1,27 +1,41 @@
-import { MarksQuery } from "../helpers/Mark/query-get-mark"
+import { MarksQuery, SearchMarksQuery } from "../helpers/Mark/query-get-mark";
 import { CreateMarkQuery } from "../helpers/Mark/query-post-mark";
-import { CreateMarkServiceProps, MarksServiceProps } from "../interfaces/interfaces-mark";
+import { CreateMarkServiceProps, MarksServiceProps, SearchMarksServiceProps } from "../interfaces/interfaces-mark";
 
-export const MarksService = async (data: MarksServiceProps) => {
+export const CreateMarkService = async (data: CreateMarkServiceProps) => {
+    const { name, ...rest } = data
+
+    const transformData = {
+        ...rest,
+        name: name.trim().toUpperCase()
+    }
+
+    const newMark = await CreateMarkQuery(transformData)
+
+    return newMark
+}
+
+export const SearchMarksService = async (data: SearchMarksServiceProps) => {
     const { word } = data
 
     const transformData = {
         word: word ? word.toUpperCase() : ''
     }
 
-    const maks = await MarksQuery(transformData);
+    const marks = await SearchMarksQuery(transformData);
 
-    return maks
+    return marks
 }
 
-export const CreateMarkService = async (data: CreateMarkServiceProps) => {
-    const { mark } = data
+export const MarksService = async (data: MarksServiceProps) => {
+    let { page, rowsPerPage } = data;
 
-    const transformData = {
-        mark: mark.toUpperCase()
+    const transformData: any = {
+        skip:  (Number(rowsPerPage) * (Number(page) + 1) - Number(rowsPerPage)),
+        take: Number(rowsPerPage)
     }
 
-    const newMark = await CreateMarkQuery(transformData)
+    const marks = await MarksQuery(transformData)
 
-    return newMark
+    return marks
 }
