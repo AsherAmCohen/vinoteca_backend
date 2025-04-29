@@ -2,6 +2,7 @@ import { Router } from "express";
 import RoutesUser from './routes-user'
 import RouterWine from './routes-wines'
 import RouterMark from './routes-mark'
+import RouterCategory from './router-category'
 
 const router: Router = Router()
 
@@ -17,5 +18,6 @@ router.get('/', (_resquest, response) => {
 router.use('/user', RoutesUser)
 router.use('/wine', RouterWine)
 router.use('/mark', RouterMark)
+router.use('/category', RouterCategory)
 
 module.exports = router;

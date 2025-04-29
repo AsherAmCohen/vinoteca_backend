@@ -34,9 +34,19 @@ model Wine {
   // Marca
   Mark        Mark?     @relation(fields: [markId], references: [id])
   markId      Int
+  // Categoria
+  Category    Category? @relation(fields: [categoryId], references: [id])
+  categoryId  Int?
 }
 
 model Mark {
+  id          Int    @id @default(autoincrement())
+  name        String @unique @db.VarChar(25)
+  description String @db.Text
+  wines       Wine[]
+}
+
+model Category {
   id          Int    @id @default(autoincrement())
   name        String @unique @db.VarChar(25)
   description String @db.Text

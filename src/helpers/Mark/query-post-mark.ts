@@ -6,7 +6,7 @@ export const CreateMarkQuery = (data: CreateMarkQueryProps) => {
         try {
             const { name, description } = data;
 
-            const newMark = await database.mark.upsert({
+            await database.mark.upsert({
                 where: {
                     name
                 },
@@ -19,7 +19,7 @@ export const CreateMarkQuery = (data: CreateMarkQueryProps) => {
                 }
             })
 
-            resolve(newMark)
+            resolve(true)
         } catch {
             reject(false)
         }

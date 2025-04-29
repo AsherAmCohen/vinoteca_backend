@@ -9,10 +9,8 @@ export const CreateMarkService = async (data: CreateMarkServiceProps) => {
         ...rest,
         name: name.trim().toUpperCase()
     }
-
-    const newMark = await CreateMarkQuery(transformData)
-
-    return newMark
+    
+    await CreateMarkQuery(transformData)
 }
 
 export const SearchMarksService = async (data: SearchMarksServiceProps) => {
@@ -28,7 +26,7 @@ export const SearchMarksService = async (data: SearchMarksServiceProps) => {
 }
 
 export const MarksService = async (data: MarksServiceProps) => {
-    let { page, rowsPerPage } = data;
+    const { page, rowsPerPage } = data;
 
     const transformData: any = {
         skip:  (Number(rowsPerPage) * (Number(page) + 1) - Number(rowsPerPage)),
