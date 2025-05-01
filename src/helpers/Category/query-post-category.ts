@@ -1,10 +1,10 @@
 import { database } from "../../database/database";
 import { CreateCategoryQueryProps } from "../../interfaces/interface-category";
 
-export const CreateCategoryQuery = (data: CreateCategoryQueryProps) => {
+export const CreateCategoryQuery = (props: CreateCategoryQueryProps) => {
     return new Promise(async(resolve, reject) => {
         try {
-            const {name, description} = data;
+            const {name, description} = props;
 
             await database.category.upsert({
                 where: {

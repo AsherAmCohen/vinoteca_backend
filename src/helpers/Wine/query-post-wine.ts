@@ -3,16 +3,17 @@
 import { database } from "../../database/database";
 import { StoreWineQueryProps } from "../../interfaces/interfaces-wine";
 
-export const StoreWineQuery = (data: StoreWineQueryProps) => {
+export const StoreWineQuery = (props: StoreWineQueryProps) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const { name, description, mark, price, stock, image } = data
+            const { name, description, mark, category, price, stock, image } = props
 
             await database.wine.create({
                 data: {
                     name,
                     description,
                     markId: mark,
+                    categoryId: category,
                     price,
                     stock,
                     image
@@ -24,43 +25,3 @@ export const StoreWineQuery = (data: StoreWineQueryProps) => {
         }
     })
 }
-
-// interface postCreadProductoProps {
-//     name: string;
-//     description: string;
-//     price: number;
-//     image: string;
-//     stock: number;
-//     sale: number;
-// }
-
-// export const creadProductQuery = (data: postCreadProductoProps) => {
-//     return new Promise(async(resolve, reject) => {
-//         try {
-//             const {
-//                 name,
-//                 description,
-//                 price,
-//                 image,
-//                 stock,
-//                 sale
-//             } = data
-
-//             await database.product.create({
-//                 data: {
-//                     Name: name,
-//                     Description: description,
-//                     Price: price,
-//                     Image: image,
-//                     Stock: stock,
-//                     Sale: sale
-//                 }
-//             })
-
-//             resolve(true)
-//         } catch (error) {
-//             console.error('Error postCreadUser')
-//             reject(false)
-//         }
-//     })
-// }

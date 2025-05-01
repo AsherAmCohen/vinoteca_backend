@@ -1,19 +1,28 @@
 import { database } from "../../database/database"
+import { WinesQueryProps } from "../../interfaces/interfaces-wine"
 
-export const WinesQuery = () => {
-    return new Promise(async(resolve, reject) => {
+export const WinesQuery = (props: WinesQueryProps) => {
+    return new Promise(async (resolve, reject) => {
         try {
-            const wines = database.wine.findMany({
+            const { skip, take } = props
+
+            const wines = await database.wine.findMany({
                 orderBy: {
                     id: 'desc'
                 },
                 include: {
-                    Mark: true
-                }
+                    Mark: true,
+                    Category: true
+                },
+                skip,
+                take
             })
-            resolve(wines)
+
+            const count = await database.wine.count()
+
+            resolve({wines: wines, count: count})
         } catch {
-            reject(false)
+            reject([])
         }
     })
 }

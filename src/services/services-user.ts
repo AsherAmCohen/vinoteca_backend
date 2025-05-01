@@ -4,8 +4,8 @@ import bcrypt from 'bcrypt';
 import { SignInServiceProps, SignUpServiceProps, UserInformationServiceProps } from "../interfaces/interfaces-user";
 import jwt from "jsonwebtoken"
 
-export const SignUpService = async (data: SignUpServiceProps) => {
-    let { email, password, birthdate, phone, gender, address, name, lastname, ...rest } = data;
+export const SignUpService = async (props: SignUpServiceProps) => {
+    let { email, password, birthdate, phone, gender, address, name, lastname, ...rest } = props;
 
     // Comprobar si el correo ya fue registrado
     if (await CheckEmailQuery(email.toUpperCase())) {
@@ -40,8 +40,8 @@ export const SignUpService = async (data: SignUpServiceProps) => {
     });
 }
 
-export const SignInService = async (data: SignInServiceProps) => {
-    let { email, password } = data;
+export const SignInService = async (props: SignInServiceProps) => {
+    let { email, password } = props;
 
     // Convertir correo en mayusculas para una mejor comparación
     email = email.toUpperCase();
@@ -79,8 +79,8 @@ export const SignInService = async (data: SignInServiceProps) => {
     }
 }
 
-export async function UserInformationService(data: UserInformationServiceProps) {
-    let { email } = data
+export async function UserInformationService(props: UserInformationServiceProps) {
+    let { email } = props
 
     // Comprobar si se envio un correo
     if (!email) {

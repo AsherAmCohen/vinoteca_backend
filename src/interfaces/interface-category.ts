@@ -17,3 +17,11 @@ export interface CategorysQueryProps {
     skip: number;
     take: number;
 }
+
+export interface SearchCategorysServiceProps {
+    word?: string;
+}
+
+export interface SearchCategorysQueryProps {
+    word: string;
+}

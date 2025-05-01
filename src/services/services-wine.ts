@@ -1,9 +1,10 @@
 import path from "path";
 import { WinesQuery } from "../helpers/Wine/query-get-wine";
 import { StoreWineQuery } from "../helpers/Wine/query-post-wine";
-import { StoreWineServiceProps, WineImageServiceProps } from "../interfaces/interfaces-wine";
+import { StoreWineServiceProps, WineImageServiceProps, WinesServiceProps } from "../interfaces/interfaces-wine";
 import fs from 'fs';
 import { CreateMarkService } from "./services-mark";
+import { skip } from "@prisma/client/runtime/library";
 
 function formatEuro(num: number) {
     return '€' + num
@@ -13,7 +14,8 @@ function formatEuro(num: number) {
 }
 
 export const StoreWineService = async (data: StoreWineServiceProps) => {
-    let { price, name, mark, ...rest } = data
+    let { price, name, mark, category, ...rest } = data
+
 
     // Cambiar el formato del precio
     price = price
@@ -27,8 +29,10 @@ export const StoreWineService = async (data: StoreWineServiceProps) => {
     const transformData = {
         ...rest,
         name: name.toUpperCase(),
+        mark: Number(mark),
+        category: Number(category),
         stock: Number(data.stock),
-        mark: 1
+
     }
 
     await StoreWineQuery({
@@ -38,23 +42,31 @@ export const StoreWineService = async (data: StoreWineServiceProps) => {
     })
 }
 
-export const WinesService = async () => {
-    const wines: any = await WinesQuery()
+export const WinesService = async (props: WinesServiceProps) => {
+    const { page, rowsPerPage } = props
+
+    const transformData: any = {
+        skip: (Number(rowsPerPage) * (Number(page) + 1) - Number(rowsPerPage)),
+        take: Number(rowsPerPage)
+    }
+
+    const { wines, count }: any = await WinesQuery(transformData)
 
     const allWines: any = [];
 
     wines.map((wine: any) => {
-        const { price, Mark, ...rest } = wine
+        const { price, Mark, markId, Category, categoryId, ...rest } = wine
         const Data = {
             ...rest,
             price: formatEuro(price),
-            mark: Mark.name
+            mark: Mark.name,
+            category: Category.name
         }
 
         allWines.push(Data)
     })
 
-    return (allWines)
+    return ({wines: allWines, count: count})
 }
 
 export async function WineImageService(props: WineImageServiceProps) {

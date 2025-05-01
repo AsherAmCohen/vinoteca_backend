@@ -1,10 +1,30 @@
 import { database } from "../../database/database"
-import { CategorysQueryProps } from "../../interfaces/interface-category"
+import { CategorysQueryProps, SearchCategorysQueryProps } from "../../interfaces/interface-category"
 
-export const CategoryQuery = (data: CategorysQueryProps) => {
+export const SearchCategorysQuery = (props: SearchCategorysQueryProps) => {
+    return new Promise(async(resolve, reject) => {
+        try {
+            const {word} = props;
+
+            const categorys = await database.category.findMany({
+                where: {
+                    name: {
+                        contains: word,
+                    }
+                }
+            })
+
+            resolve(categorys)
+        } catch {
+            reject([])
+        }
+    })
+}
+
+export const CategoryQuery = (props: CategorysQueryProps) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const { skip, take } = data
+            const { skip, take } = props
             const categorys = await database.category.findMany({
                 orderBy: {
                     id: 'desc'
@@ -17,7 +37,7 @@ export const CategoryQuery = (data: CategorysQueryProps) => {
 
             resolve({categorys: categorys, count: count})
         } catch {
-            reject(false)
+            reject([])
         }
     })
 }

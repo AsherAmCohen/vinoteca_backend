@@ -1,10 +1,10 @@
 import { database } from "../../database/database"
 import { MarksQueryProps, SearchMarksQueryProps } from "../../interfaces/interfaces-mark"
 
-export const SearchMarksQuery = (data: SearchMarksQueryProps) => {
+export const SearchMarksQuery = (props: SearchMarksQueryProps) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const { word } = data;
+            const { word } = props;
 
             const marks = await database.mark.findMany({
                 where: {
@@ -15,15 +15,15 @@ export const SearchMarksQuery = (data: SearchMarksQueryProps) => {
             })
             resolve(marks)
         } catch {
-            reject(false)
+            reject([])
         }
     })
 }
 
-export const MarksQuery = (data: MarksQueryProps) => {
+export const MarksQuery = (props: MarksQueryProps) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const {skip, take} = data
+            const {skip, take} = props
             const marks = await database.mark.findMany(
                 {
                     orderBy: {
@@ -38,7 +38,7 @@ export const MarksQuery = (data: MarksQueryProps) => {
 
             resolve({marks: marks, count: count})
         } catch {
-            reject(false)
+            reject([])
         }
     })
 }

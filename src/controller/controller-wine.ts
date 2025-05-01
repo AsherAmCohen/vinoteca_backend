@@ -1,22 +1,6 @@
 import { RequestHandler } from "express";
 import { StoreWineService, WineImageService, WinesService } from "../services/services-wine";
 
-const products = [
-    {
-        id: 1,
-        name: 'Vino',
-        price: '3$'
-    }, {
-        id: 2,
-        name: 'Licor',
-        price: '3$'
-    }, {
-        id: 3,
-        name: 'Licor',
-        price: '3$'
-    }
-]
-
 export const StoreWineController: RequestHandler = async (request, response) => {
     try {
         await StoreWineService(request.body)
@@ -37,7 +21,7 @@ export const StoreWineController: RequestHandler = async (request, response) => 
 
 export const WinesController: RequestHandler = async (request, response) => {
     try {
-        const wines = await WinesService()
+        const wines = await WinesService(request.query)
         response.json({
             status: 'success',
             msg: 'Lista de vinos',

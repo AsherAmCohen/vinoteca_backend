@@ -1,10 +1,10 @@
-import { CategoryQuery } from "../helpers/Category/query-get-category";
+import { CategoryQuery, SearchCategorysQuery } from "../helpers/Category/query-get-category";
 import { CreateCategoryQuery } from "../helpers/Category/query-post-category";
-import { CategorysServiceProps } from "../interfaces/interface-category";
+import { CategorysServiceProps, SearchCategorysServiceProps } from "../interfaces/interface-category";
 import { CreateMarkQueryProps } from "../interfaces/interfaces-mark";
 
-export const CreateCategoryService = async (data: CreateMarkQueryProps) => {
-    const { name, ...rest } = data
+export const CreateCategoryService = async (props: CreateMarkQueryProps) => {
+    const { name, ...rest } = props
 
     const transformData = {
         ...rest,
@@ -14,8 +14,20 @@ export const CreateCategoryService = async (data: CreateMarkQueryProps) => {
     await CreateCategoryQuery(transformData)
 }
 
-export const CategorysService = async (data: CategorysServiceProps) => {
-    const { page, rowsPerPage } = data;
+export const SearchCategorysService = async (props: SearchCategorysServiceProps) => {
+    const {word} = props
+
+    const transformData = {
+        word: word ? word.toUpperCase() : ''
+    }
+
+    const categorys = await SearchCategorysQuery(transformData)
+    
+    return categorys
+}
+
+export const CategorysService = async (props: CategorysServiceProps) => {
+    const { page, rowsPerPage } = props;
 
     const transformData: any = {
         skip:  (Number(rowsPerPage) * (Number(page) + 1) - Number(rowsPerPage)),

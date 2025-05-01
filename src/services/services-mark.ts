@@ -2,19 +2,19 @@ import { MarksQuery, SearchMarksQuery } from "../helpers/Mark/query-get-mark";
 import { CreateMarkQuery } from "../helpers/Mark/query-post-mark";
 import { CreateMarkServiceProps, MarksServiceProps, SearchMarksServiceProps } from "../interfaces/interfaces-mark";
 
-export const CreateMarkService = async (data: CreateMarkServiceProps) => {
-    const { name, ...rest } = data
+export const CreateMarkService = async (props: CreateMarkServiceProps) => {
+    const { name, ...rest } = props
 
     const transformData = {
         ...rest,
         name: name.trim().toUpperCase()
     }
-    
+
     await CreateMarkQuery(transformData)
 }
 
-export const SearchMarksService = async (data: SearchMarksServiceProps) => {
-    const { word } = data
+export const SearchMarksService = async (props: SearchMarksServiceProps) => {
+    const { word } = props
 
     const transformData = {
         word: word ? word.toUpperCase() : ''
@@ -25,11 +25,11 @@ export const SearchMarksService = async (data: SearchMarksServiceProps) => {
     return marks
 }
 
-export const MarksService = async (data: MarksServiceProps) => {
-    const { page, rowsPerPage } = data;
+export const MarksService = async (props: MarksServiceProps) => {
+    const { page, rowsPerPage } = props;
 
     const transformData: any = {
-        skip:  (Number(rowsPerPage) * (Number(page) + 1) - Number(rowsPerPage)),
+        skip: (Number(rowsPerPage) * (Number(page) + 1) - Number(rowsPerPage)),
         take: Number(rowsPerPage)
     }
 
