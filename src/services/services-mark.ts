@@ -1,6 +1,6 @@
-import { MarksQuery, SearchMarksQuery } from "../helpers/Mark/query-get-mark";
+import { MarksAllQuery, MarksQuery } from "../helpers/Mark/query-get-mark";
 import { CreateMarkQuery } from "../helpers/Mark/query-post-mark";
-import { CreateMarkServiceProps, MarksServiceProps, SearchMarksServiceProps } from "../interfaces/interfaces-mark";
+import { CreateMarkServiceProps, MarksServiceProps } from "../interfaces/interfaces-mark";
 
 export const CreateMarkService = async (props: CreateMarkServiceProps) => {
     const { name, ...rest } = props
@@ -13,16 +13,20 @@ export const CreateMarkService = async (props: CreateMarkServiceProps) => {
     await CreateMarkQuery(transformData)
 }
 
-export const SearchMarksService = async (props: SearchMarksServiceProps) => {
-    const { word } = props
+export const MarksAllService = async () => {
+    const marks: any = await MarksAllQuery();
 
-    const transformData = {
-        word: word ? word.toUpperCase() : ''
-    }
+    const allMarks: any = []
 
-    const marks = await SearchMarksQuery(transformData);
+    marks.map((mark: any) => {
+        const Data = {
+            id: mark.id,
+            name: mark.name
+        }
+        allMarks.push(Data)
+    })
 
-    return marks
+    return allMarks
 }
 
 export const MarksService = async (props: MarksServiceProps) => {

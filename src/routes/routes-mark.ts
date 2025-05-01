@@ -1,10 +1,10 @@
 import { Router } from "express";
-import { CreateMarkController, MarksController, SearchMarksController } from "../controller/controller-mark";
+import { CreateMarkController, MarksAllController, MarksController } from "../controller/controller-mark";
 
 const router: Router = Router();
 
 router.post('/create', CreateMarkController)
-router.get('/search', SearchMarksController)
+router.get('/all', MarksAllController)
 router.get('/marks', MarksController)
 
 export default router

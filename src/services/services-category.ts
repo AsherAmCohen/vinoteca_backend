@@ -1,6 +1,6 @@
-import { CategoryQuery, SearchCategorysQuery } from "../helpers/Category/query-get-category";
+import { CategoryQuery, CategorysAllQuery } from "../helpers/Category/query-get-category";
 import { CreateCategoryQuery } from "../helpers/Category/query-post-category";
-import { CategorysServiceProps, SearchCategorysServiceProps } from "../interfaces/interface-category";
+import { CategorysServiceProps } from "../interfaces/interface-category";
 import { CreateMarkQueryProps } from "../interfaces/interfaces-mark";
 
 export const CreateCategoryService = async (props: CreateMarkQueryProps) => {
@@ -14,14 +14,8 @@ export const CreateCategoryService = async (props: CreateMarkQueryProps) => {
     await CreateCategoryQuery(transformData)
 }
 
-export const SearchCategorysService = async (props: SearchCategorysServiceProps) => {
-    const {word} = props
-
-    const transformData = {
-        word: word ? word.toUpperCase() : ''
-    }
-
-    const categorys = await SearchCategorysQuery(transformData)
+export const CategorysAllService = async () => {
+    const categorys = await CategorysAllQuery()
     
     return categorys
 }

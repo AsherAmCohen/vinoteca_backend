@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import { CreateMarkService, MarksService, SearchMarksService, } from "../services/services-mark";
+import { CreateMarkService, MarksAllService, MarksService, } from "../services/services-mark";
 
 export const CreateMarkController: RequestHandler = async (request, response) => {
     try {
@@ -18,12 +18,12 @@ export const CreateMarkController: RequestHandler = async (request, response) =>
     }
 }
 
-export const SearchMarksController: RequestHandler = async (request, response) => {
+export const MarksAllController: RequestHandler = async (request, response) => {
     try {
-        const marks = await SearchMarksService(request.query)
+        const marks = await MarksAllService()
         response.json({
             status: 'success',
-            msg: 'Lista de marcas por coincidencia',
+            msg: 'Lista de todas las marcas',
             data: marks
         })
     } catch (error: any) {

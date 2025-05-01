@@ -1,11 +1,3 @@
-export interface SearchMarksServiceProps {
-    word?: string;
-}
-
-export interface SearchMarksQueryProps {
-    word: string;
-}
-
 export interface CreateMarkServiceProps {
     name: string;
     description: string;

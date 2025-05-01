@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import { CategorysService, CreateCategoryService, SearchCategorysService } from "../services/services-category";
+import { CategorysAllService, CategorysService, CreateCategoryService } from "../services/services-category";
 
 export const CreateCategoryController: RequestHandler = async (request, response) => {
     try {
@@ -18,19 +18,19 @@ export const CreateCategoryController: RequestHandler = async (request, response
     }
 }
 
-export const searchCategorysController: RequestHandler = async (request, response) => {
+export const CategorysAllController: RequestHandler = async (request, response) => {
     try {
-        const categorys = await SearchCategorysService(request.query)
+        const categorys = await CategorysAllService()
         response.json({
             status: 'success',
-            msg: 'Lista de categorias por coincidencia',
+            msg: 'Lista de categorias',
             data: categorys
         })
     } catch (error: any) {
         response.status(500)
             .send({
-                status: 'success',
-                msg: 'Lista de categorias por coincidencia'
+                status: 'error',
+                msg: 'Error en obtener lista de categorias por coincidencia'
             })
     }
 }

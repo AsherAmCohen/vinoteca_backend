@@ -1,18 +1,10 @@
 import { database } from "../../database/database"
-import { MarksQueryProps, SearchMarksQueryProps } from "../../interfaces/interfaces-mark"
+import { MarksQueryProps } from "../../interfaces/interfaces-mark"
 
-export const SearchMarksQuery = (props: SearchMarksQueryProps) => {
+export const MarksAllQuery = () => {
     return new Promise(async (resolve, reject) => {
         try {
-            const { word } = props;
-
-            const marks = await database.mark.findMany({
-                where: {
-                    name: {
-                        contains: word,
-                    }
-                }
-            })
+            const marks = await database.mark.findMany()
             resolve(marks)
         } catch {
             reject([])

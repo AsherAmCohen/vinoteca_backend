@@ -1,19 +1,10 @@
 import { database } from "../../database/database"
-import { CategorysQueryProps, SearchCategorysQueryProps } from "../../interfaces/interface-category"
+import { CategorysQueryProps } from "../../interfaces/interface-category"
 
-export const SearchCategorysQuery = (props: SearchCategorysQueryProps) => {
+export const CategorysAllQuery = () => {
     return new Promise(async(resolve, reject) => {
         try {
-            const {word} = props;
-
-            const categorys = await database.category.findMany({
-                where: {
-                    name: {
-                        contains: word,
-                    }
-                }
-            })
-
+            const categorys = await database.category.findMany()
             resolve(categorys)
         } catch {
             reject([])
