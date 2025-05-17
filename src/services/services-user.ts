@@ -48,13 +48,14 @@ export const SignInService = async (props: SignInServiceProps) => {
 
     // Comprobar si el usuario esta en la base de datos
     const user: any = await CheckEmailQuery(email)
-
+    
     if (!user) {
         throw new Error('Correo electronicó no registrado')
+
     }
 
     // Comparar contraseña
-    const passwordMatch = await bcrypt.compare(password, user.Password)
+    const passwordMatch = await bcrypt.compare(password, user.password)
 
     if (!passwordMatch) {
         throw new Error('Contraseña incorrecta')
@@ -64,17 +65,14 @@ export const SignInService = async (props: SignInServiceProps) => {
 
     // Generar JWT
     const token = jwt.sign({
-        id: user.Id,
-        name: user.Name,
-        email: user.Email
+        name: user.name,
+        email: user.email,
+        phone: user.phone
     }, SECRET_KEY, {
         expiresIn: '1h'
     })
 
     return {
-        id: user.Id,
-        name: user.Name,
-        email: user.Email,
         token
     }
 }
@@ -98,7 +96,7 @@ export async function UserInformationService(props: UserInformationServiceProps)
     }
 
     // Convertir fecha a un formato mas legible
-    const fecha = new Date(userInfo.Birthdate)
+    const fecha = new Date(userInfo.birthdate)
     const legible = fecha.toLocaleDateString("es-ES", {
         day: "numeric",
         month: "long",
@@ -107,12 +105,12 @@ export async function UserInformationService(props: UserInformationServiceProps)
     })
 
     return {
-        name: userInfo.Name,
-        lastname: userInfo.Lastname,
-        gender: userInfo.Gender,
-        email: userInfo.Email,
-        address: userInfo.Address,
-        phone: userInfo.Phone,
+        name: userInfo.name,
+        lastname: userInfo.lastname,
+        gender: userInfo.gender,
+        email: userInfo.email,
+        address: userInfo.address,
+        phone: userInfo.phone,
         birthdate: legible.toUpperCase()
     }
 }
