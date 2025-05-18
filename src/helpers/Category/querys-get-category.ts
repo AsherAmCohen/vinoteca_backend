@@ -1,5 +1,5 @@
 import { database } from "../../database/database"
-import { CategorysQueryProps } from "../../interfaces/interface-category"
+import { CategorysQueryProps } from "../../interfaces/interfaces-category"
 
 export const CategorysAllQuery = () => {
     return new Promise(async(resolve, reject) => {

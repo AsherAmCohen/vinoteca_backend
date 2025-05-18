@@ -2,7 +2,8 @@ import { Router } from "express";
 import RoutesUser from './routes-user'
 import RouterWine from './routes-wines'
 import RouterMark from './routes-mark'
-import RouterCategory from './router-category'
+import RouterCategory from './routes-category'
+import RouterShoppingCart from './routes-shoppingCart'
 
 const router: Router = Router()
 
@@ -19,5 +20,6 @@ router.use('/user', RoutesUser)
 router.use('/wine', RouterWine)
 router.use('/mark', RouterMark)
 router.use('/category', RouterCategory)
+router.use('/shoppingCart', RouterShoppingCart)
 
 module.exports = router;

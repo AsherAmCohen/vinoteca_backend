@@ -1,8 +1,9 @@
-import { CheckEmailQuery, UserInformationQuery } from "../helpers/User/query-get-user";
-import { SignUpQuery } from "../helpers/User/query-post-user";
+import { CheckEmailQuery, UserInformationQuery } from "../helpers/User/querys-get-user";
+import { SignUpQuery } from "../helpers/User/querys-post-user";
 import bcrypt from 'bcrypt';
 import { SignInServiceProps, SignUpServiceProps, UserInformationServiceProps } from "../interfaces/interfaces-user";
 import jwt from "jsonwebtoken"
+import { CreateShoppingCartQuery } from "../helpers/ShoppingCart/querys-post-shoppingCart";
 
 export const SignUpService = async (props: SignUpServiceProps) => {
     let { email, password, birthdate, phone, gender, address, name, lastname, ...rest } = props;
@@ -32,12 +33,15 @@ export const SignUpService = async (props: SignUpServiceProps) => {
         lastname: lastname.toUpperCase(),
     };
 
-    await SignUpQuery({
+    const user: any = await SignUpQuery({
         ...transformData,
         phone: phoneFormatted,
         birthdate: birthDateFormatted,
         password: hashedPassword,
     });
+
+    // Tambien se crea el carrito
+    await CreateShoppingCartQuery(user.id)
 }
 
 export const SignInService = async (props: SignInServiceProps) => {
@@ -48,10 +52,9 @@ export const SignInService = async (props: SignInServiceProps) => {
 
     // Comprobar si el usuario esta en la base de datos
     const user: any = await CheckEmailQuery(email)
-    
+
     if (!user) {
         throw new Error('Correo electronicó no registrado')
-
     }
 
     // Comparar contraseña
@@ -67,7 +70,8 @@ export const SignInService = async (props: SignInServiceProps) => {
     const token = jwt.sign({
         name: user.name,
         email: user.email,
-        phone: user.phone
+        phone: user.phone,
+        shoppingCart: user.shoppingCart.id
     }, SECRET_KEY, {
         expiresIn: '1h'
     })

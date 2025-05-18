@@ -1,5 +1,5 @@
-import { MarksAllQuery, MarksQuery } from "../helpers/Mark/query-get-mark";
-import { CreateMarkQuery } from "../helpers/Mark/query-post-mark";
+import { MarksAllQuery, MarksQuery } from "../helpers/Mark/querys-get-mark";
+import { CreateMarkQuery } from "../helpers/Mark/querys-post-mark";
 import { CreateMarkServiceProps, MarksServiceProps } from "../interfaces/interfaces-mark";
 
 export const CreateMarkService = async (props: CreateMarkServiceProps) => {

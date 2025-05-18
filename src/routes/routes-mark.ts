@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { CreateMarkController, MarksAllController, MarksController } from "../controller/controller-mark";
+import { CreateMarkController, MarksAllController, MarksController } from "../controllers/controllers-mark";
 
 const router: Router = Router();
 

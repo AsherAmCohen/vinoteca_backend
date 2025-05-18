@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { StoreWineController, WineImageController, WinesController } from "../controller/controller-wine";
+import { StoreWineController, WineImageController, WinesController } from "../controllers/controllers-wine";
 import { storage } from "../storage/storage";
 import multer from "multer";
 

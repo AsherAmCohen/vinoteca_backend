@@ -1,6 +1,6 @@
-import { CategoryQuery, CategorysAllQuery } from "../helpers/Category/query-get-category";
-import { CreateCategoryQuery } from "../helpers/Category/query-post-category";
-import { CategorysServiceProps } from "../interfaces/interface-category";
+import { CategoryQuery, CategorysAllQuery } from "../helpers/Category/querys-get-category";
+import { CreateCategoryQuery } from "../helpers/Category/querys-post-category";
+import { CategorysServiceProps } from "../interfaces/interfaces-category";
 import { CreateMarkQueryProps } from "../interfaces/interfaces-mark";
 
 export const CreateCategoryService = async (props: CreateMarkQueryProps) => {

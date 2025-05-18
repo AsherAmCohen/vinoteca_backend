@@ -1,3 +1,4 @@
+import { rejects } from "assert"
 import { database } from "../../database/database"
 import { WinesQueryProps } from "../../interfaces/interfaces-wine"
 
@@ -20,9 +21,25 @@ export const WinesQuery = (props: WinesQueryProps) => {
 
             const count = await database.wine.count()
 
-            resolve({wines: wines, count: count})
+            resolve({ wines: wines, count: count })
         } catch {
             reject([])
+        }
+    })
+}
+
+export const StockWineQuery = (id: number) => {
+    return new Promise(async(resolve, rejects) => {
+        try {
+            const stock = await database.wine.findUnique({
+                where: {
+                    id
+                }
+            })
+
+            resolve(stock?.stock || 0)
+        } catch {
+            rejects(0)
         }
     })
 }

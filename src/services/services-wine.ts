@@ -1,6 +1,6 @@
 import path from "path";
-import { WinesQuery } from "../helpers/Wine/query-get-wine";
-import { StoreWineQuery } from "../helpers/Wine/query-post-wine";
+import { WinesQuery } from "../helpers/Wine/querys-get-wine";
+import { StoreWineQuery } from "../helpers/Wine/querys-post-wine";
 import { StoreWineServiceProps, WineImageServiceProps, WinesServiceProps } from "../interfaces/interfaces-wine";
 import fs from 'fs';
 import { CreateMarkService } from "./services-mark";
@@ -66,10 +66,10 @@ export const WinesService = async (props: WinesServiceProps) => {
         allWines.push(Data)
     })
 
-    return ({wines: allWines, count: count})
+    return ({ wines: allWines, count: count })
 }
 
-export async function WineImageService(props: WineImageServiceProps) {
+export const WineImageService = async (props: WineImageServiceProps) => {
     const { image } = props
 
     if (!image) {

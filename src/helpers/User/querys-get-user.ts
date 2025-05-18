@@ -8,6 +8,9 @@ export const CheckEmailQuery = (email: string) => {
             const EmailExists = await database.user.findUnique({
                 where: {
                     email
+                },
+                include: {
+                    shoppingCart: true
                 }
             })
 
