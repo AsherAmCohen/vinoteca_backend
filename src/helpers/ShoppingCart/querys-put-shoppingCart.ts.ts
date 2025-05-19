@@ -4,12 +4,17 @@ export const UpdateAmountProductShoppingCartQuery = (props: any) => {
     return new Promise(async (resolve, reject) => {
         try {
             const { wineId, shoppingCartId, amount } = props;
-            await database.wines_has_ShoppingCard.update({
+            await database.wines_has_ShoppingCard.upsert({
                 where: {
                     wineId,
                     shoppingCartId
                 },
-                data: {
+                create: {
+                    wineId,
+                    shoppingCartId,
+                    amount
+                },
+                update: {
                     amount
                 }
             })

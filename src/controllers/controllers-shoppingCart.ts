@@ -1,21 +1,5 @@
 import { RequestHandler } from "express";
-import { AddProductShoppingCartService, AmountProductShoppingCartService, CountProductsShoppingCartService, UpdateAmountProductShoppingCartService } from "../services/services-shoppingCart";
-
-export const AddProductShoppingCartController: RequestHandler = async (request, response) => {
-    try {
-        AddProductShoppingCartService(request.body)
-        response.json({
-            status: 'success',
-            msg: 'Vino almacenado en el carrito'
-        })
-    } catch (error: any) {
-        response.status(500)
-            .send({
-                status: 'error',
-                msg: error.message || 'Error al agregar el vino al carrito'
-            })
-    }
-}
+import { AmountProductShoppingCartService, CountProductsShoppingCartService, UpdateAmountProductShoppingCartService } from "../services/services-shoppingCart";
 
 export const AmountProductShoppingCartController: RequestHandler = async (request, response) => {
     try {

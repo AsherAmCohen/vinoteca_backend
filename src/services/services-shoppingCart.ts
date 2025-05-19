@@ -1,19 +1,7 @@
 import { DeleteProductoShoppingCartQuery } from "../helpers/ShoppingCart/querys-delete-shoppingCart";
 import { AmountProductShoppingCartQuery, CountProductsShoppingCartQuery } from "../helpers/ShoppingCart/querys-get-shoppingCart";
-import { AddProductShoppingCartQuery } from "../helpers/ShoppingCart/querys-post-shoppingCart";
 import { UpdateAmountProductShoppingCartQuery } from "../helpers/ShoppingCart/querys-put-shoppingCart.ts";
 import { StockWineQuery } from "../helpers/Wine/querys-get-wine";
-
-export const AddProductShoppingCartService = async (props: any) => {
-    const { wineId, shoppingCartId } = props;
-
-    const transformData = {
-        wineId: parseInt(wineId),
-        shoppingCartId: parseInt(shoppingCartId)
-    }
-    // Crear el producto con el vino
-    await AddProductShoppingCartQuery(transformData)
-}
 
 export const AmountProductShoppingCartService = async (props: any) => {
     const { wineId, shoppingCartId } = props;
