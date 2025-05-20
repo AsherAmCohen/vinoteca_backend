@@ -10,7 +10,16 @@ export const CheckEmailQuery = (email: string) => {
                     email
                 },
                 include: {
-                    shoppingCart: true
+                    shoppingCart: true,
+                    Role: {
+                        include: {
+                            permissions: {
+                                include: {
+                                    Permission: true
+                                }
+                            }
+                        }
+                    }
                 }
             })
 
@@ -26,17 +35,47 @@ export const CheckEmailQuery = (email: string) => {
 }
 
 export const UserInformationQuery = (email: string) => {
-    return new Promise(async(resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         try {
             const user = await database.user.findUnique({
                 where: {
                     email
                 }
             })
-            
+
             resolve(user)
         } catch {
             reject(false)
-        } 
+        }
+    })
+}
+
+
+export const UsersRegisterAllQuery = (props: any) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const { skip, take, email } = props;
+            const users = await database.user.findMany({
+                where: {
+                    NOT: {
+                        email
+                    }
+                },
+                include: {
+                    Role: true
+                },
+                orderBy: {
+                    createdAt: 'desc'
+                },
+                skip,
+                take
+            })
+
+            const count = await database.user.count()
+
+            resolve({ users: users, count: count })
+        } catch {
+            reject(false)
+        }
     })
 }

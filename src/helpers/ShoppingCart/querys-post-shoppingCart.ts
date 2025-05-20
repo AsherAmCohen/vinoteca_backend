@@ -8,6 +8,8 @@ export const CreateShoppingCartQuery = (userId: number) => {
                     userId
                 }
             })
+
+            resolve(true)
         } catch {
             reject(false)
         }

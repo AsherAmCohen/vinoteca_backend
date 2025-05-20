@@ -1,0 +1,123 @@
+import { PrismaClient } from '@prisma/client'
+import bcrypt from 'bcrypt';
+
+const prisma = new PrismaClient()
+
+async function main() {
+    // 1. Crear permisos
+    const permissions = await prisma.permission.createMany({
+        data: [
+            // Vistas
+            { name: 'VIEW_PROFILE', description: 'Ver la información del usuario' },
+            { name: 'VIEW_WINE', description: 'Ver la lista de vinos' },
+            { name: 'VIEW_MARK', description: 'Ver la de marcas' },
+            { name: 'VIEW_CATEGORY', description: 'Ver la lista de categorias' },
+            { name: 'VIEW_ORDER', description: 'Ver la lista ordenes' },
+            { name: 'VIEW_USER', description: 'Ver la de usuarios' },
+            // Agregar
+            { name: 'EDIT_WINE', description: 'Editar vinos' },
+        ],
+        skipDuplicates: true
+    })
+
+    // 2. Crear rol ADMIN
+    const adminRole = await prisma.role.upsert({
+        where: { name: 'ADMIN' },
+        update: {},
+        create: {
+            name: 'ADMIN',
+            description: 'Administrador de la aplicación'
+        }
+    })
+
+    // 3. Crear role USER
+    const userRole = await prisma.role.upsert({
+        where: { name: 'USER' },
+        update: {},
+        create: {
+            name: 'USER',
+            description: 'Usuario normal'
+        }
+    })
+
+    // 3. Obtener todos los permisos
+    const allPermissions = await prisma.permission.findMany()
+
+    // 4. Asignar todos los permisos al rol ADMIN
+    await Promise.all(
+        allPermissions.map(permission =>
+            prisma.permission_has_Role.upsert({
+                where: {
+                    roleId_permissionId: {
+                        roleId: adminRole.id,
+                        permissionId: permission.id
+                    }
+                },
+                update: {},
+                create: {
+                    roleId: adminRole.id,
+                    permissionId: permission.id
+                }
+            })
+        )
+    )
+
+    // 5. Buscar los permisos del usuario USER
+    const userPermissions = await prisma.permission.findMany({
+        where: {
+            name: {
+                in: ['VIEW_PROFILE']
+            }
+        }
+    })
+
+    // 6. Asignar los permisos al rol
+    await Promise.all(
+        userPermissions.map(permission =>
+            prisma.permission_has_Role.upsert({
+                where: {
+                    roleId_permissionId: {
+                        roleId: userRole.id,
+                        permissionId: permission.id
+                    }
+                },
+                update: {},
+                create: {
+                    roleId: userRole.id,
+                    permissionId: permission.id
+                }
+            })
+        )
+    )
+
+    // 6. Agregar al usuario administrador
+    const user = await prisma.user.upsert({
+        where: { email: 'ADMIN@ADMIN.COM' },
+        update: {},
+        create: {
+            name: 'ADMINISTRADOR',
+            lastname: 'PRINCIPAL',
+            gender: 'INDEFINIDO',
+            email: 'ADMIN@ADMIN.COM',
+            address: 'CALLE DEL OLVIDO',
+            phone: 123456789,
+            birthdate: new Date('1999-09-14'),
+            password: await bcrypt.hash('SG9sYU11bmRv*', 10),
+            roleId: adminRole.id,
+        }
+    })
+
+    // 7. Agregar el carrito inicial al administrador
+    await prisma.shoppingCart.create({
+        data: {
+            userId: adminRole.id
+        }
+    })
+}
+
+main()
+    .catch(e => {
+        process.exit(1)
+    }).finally(async () => {
+        await prisma.$disconnect()
+    })

@@ -1,4 +1,4 @@
-import { CheckEmailQuery, UserInformationQuery } from "../helpers/User/querys-get-user";
+import { CheckEmailQuery, UserInformationQuery, UsersRegisterAllQuery } from "../helpers/User/querys-get-user";
 import { SignUpQuery } from "../helpers/User/querys-post-user";
 import bcrypt from 'bcrypt';
 import { SignInServiceProps, SignUpServiceProps, UserInformationServiceProps } from "../interfaces/interfaces-user";
@@ -42,6 +42,8 @@ export const SignUpService = async (props: SignUpServiceProps) => {
 
     // Tambien se crea el carrito
     await CreateShoppingCartQuery(user.id)
+
+    return;
 }
 
 export const SignInService = async (props: SignInServiceProps) => {
@@ -66,11 +68,19 @@ export const SignInService = async (props: SignInServiceProps) => {
 
     const SECRET_KEY = `${process.env.SECRET_KEY}`
 
+    // Rol
+    const role = user.Role.name
+
+    // Permisos
+    const permissions = user.Role?.permissions.map((p: any) => p.Permission.name)
+
     // Generar JWT
     const token = jwt.sign({
         name: user.name,
         email: user.email,
         phone: user.phone,
+        role: role,
+        permissions: permissions,
         shoppingCart: user.shoppingCart.id
     }, SECRET_KEY, {
         expiresIn: '1h'
@@ -117,4 +127,45 @@ export async function UserInformationService(props: UserInformationServiceProps)
         phone: userInfo.phone,
         birthdate: legible.toUpperCase()
     }
+}
+
+export const UsersRegisterAllService = async (props: any) => {
+    const { page, rowsPerPage, email } = props
+
+    const transformData: any = {
+        skip: (Number(rowsPerPage) * (Number(page) + 1) - Number(rowsPerPage)),
+        take: Number(rowsPerPage),
+        email: email.toUpperCase()
+    }
+    
+    const data: any = await UsersRegisterAllQuery(transformData)
+
+    const { users, count } = data
+
+    const AllUsers: any = [];
+
+    users.map((user: any) => {
+        const createdAt = new Date(user.createdAt)
+        const readableDate = createdAt.toLocaleString('es-ES', {
+            day: '2-digit',
+            month: 'long',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        })
+
+        const Data = {
+            name: user.name,
+            lastname: user.lastname,
+            email: user.email,
+            role: user.Role.name,
+            createdAt: readableDate
+        }
+
+        AllUsers.push(Data)
+    })
+
+    const sendData = { users: AllUsers, count: count }
+
+    return sendData
 }

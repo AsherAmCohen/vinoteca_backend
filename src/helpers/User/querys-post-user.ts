@@ -5,6 +5,13 @@ export const SignUpQuery = (props: SignUpQueryProps) => {
     return new Promise(async(resolve, reject) => {
         try {
             const {name, lastname, gender, email, address, phone, birthdate, password} = props
+
+            // Obtener el rol USER
+            const userRole: any = await database.role.findUnique({
+                where: {
+                    name: 'USER'
+                }
+            })
             
             const user = await database.user.create({
                 data: {
@@ -15,7 +22,8 @@ export const SignUpQuery = (props: SignUpQueryProps) => {
                     address,
                     phone, 
                     birthdate,
-                    password
+                    password,
+                    roleId: userRole.id
                 }
             })
             resolve(user)

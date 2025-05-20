@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import { SignInService, SignUpService, UserInformationService } from "../services/services-user";
+import { SignInService, SignUpService, UserInformationService, UsersRegisterAllService } from "../services/services-user";
 
 export const SignUpController: RequestHandler = async (request, response) => {
     try {
@@ -50,7 +50,23 @@ export const UserInformationController: RequestHandler = async (request, respons
             .send({
                 status: 'error',
                 msg: error.message || 'No se ha podido obtener la información del usuario',
-                data: ''
             })
+    }
+}
+
+export const UsersRegisterAllController: RequestHandler = async (request, response) => {
+    try { 
+        const users = await UsersRegisterAllService(request.query)
+        response.json({
+            status: 'success',
+            msg: 'Información obtenida',
+            data: users
+        })
+    } catch (error: any) {
+        response.status(500)
+        .send({
+            status: 'error',
+            msg: error.message || 'No se han obtenidos los usuarios registrados',
+        })
     }
 }
