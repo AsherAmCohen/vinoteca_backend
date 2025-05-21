@@ -55,3 +55,15 @@ export const InfoRole = (props: any) => {
         }
     })
 }
+
+export const RolesAllQuery = () => {
+    return new Promise (async(resolve, reject) => {
+        try {
+            const roles = await database.role.findMany({})
+
+            resolve(roles)
+        } catch {
+            reject([])
+        }
+    })
+}

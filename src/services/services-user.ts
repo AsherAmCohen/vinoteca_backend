@@ -91,7 +91,7 @@ export const SignInService = async (props: SignInServiceProps) => {
     }
 }
 
-export async function UserInformationService(props: UserInformationServiceProps) {
+export const UserInformationService = async(props: UserInformationServiceProps) => {
     let { email } = props
 
     // Comprobar si se envio un correo
@@ -155,10 +155,11 @@ export const UsersRegisterService = async (props: any) => {
         })
 
         const Data = {
+            id: user.id,
             name: user.name,
             lastname: user.lastname,
             email: user.email,
-            role: user.Role.name,
+            role: user.Role,
             createdAt: readableDate
         }
 

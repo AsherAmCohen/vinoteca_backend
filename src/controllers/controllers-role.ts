@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import { CreateRoleService, PermissionsService, RolesService, UpdatePermissionsRoleService } from "../services/services-role";
+import { CreateRoleService, PermissionsService, RolesAllService, RolesService, UpdatePermissionsRoleService } from "../services/services-role";
 
 export const RolesController: RequestHandler = async (request, response) => {
     try {
@@ -11,14 +11,14 @@ export const RolesController: RequestHandler = async (request, response) => {
         })
     } catch (error: any) {
         response.status(500)
-        .send({
-            status: 'error',
-            msg: error.message || 'Obtener roles'
-        })
+            .send({
+                status: 'error',
+                msg: error.message || 'Obtener roles'
+            })
     }
 }
 
-export const PermissionsController: RequestHandler = async(request, response) => {
+export const PermissionsController: RequestHandler = async (request, response) => {
     try {
         const permissions = await PermissionsService()
 
@@ -29,14 +29,14 @@ export const PermissionsController: RequestHandler = async(request, response) =>
         })
     } catch (error: any) {
         response.status(500)
-        .send({
-            status: 'error',
-            msg: error.message || 'Obtener permisos'
-        })
+            .send({
+                status: 'error',
+                msg: error.message || 'Obtener permisos'
+            })
     }
 }
 
-export const CreateRoleController: RequestHandler = async(request, response) => {
+export const CreateRoleController: RequestHandler = async (request, response) => {
     try {
         await CreateRoleService(request.body)
         response.json({
@@ -45,14 +45,14 @@ export const CreateRoleController: RequestHandler = async(request, response) => 
         })
     } catch (error: any) {
         response.status(500)
-        .send({
-            status: 'error',
-            msg: error.message || 'Crear nuevo rol'
-        })
+            .send({
+                status: 'error',
+                msg: error.message || 'Crear nuevo rol'
+            })
     }
 }
 
-export const UpdatePermissionsRoleController: RequestHandler = async(request, response) => {
+export const UpdatePermissionsRoleController: RequestHandler = async (request, response) => {
     try {
         await UpdatePermissionsRoleService(request.body)
         response.json({
@@ -61,9 +61,25 @@ export const UpdatePermissionsRoleController: RequestHandler = async(request, re
         })
     } catch (error: any) {
         response.status(500)
-        .send({
+            .send({
+                status: 'error',
+                msg: error.message || 'Modificar rol'
+            })
+    }
+}
+
+export const RolesAllController: RequestHandler = async (request, response) => {
+    try {
+        const roles = await RolesAllService()
+        response.json({
+            status: 'success',
+            msg: 'Roles obtenidos',
+            data: roles
+        })
+    } catch (error: any) {
+        response.send({
             status: 'error',
-            msg: error.message || 'Modificar rol'
+            msg: error.messsage || 'Obtener todos los roles disponibles'
         })
     }
 }

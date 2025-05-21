@@ -1,5 +1,5 @@
 import { DeletePermissionsHasRole } from "../helpers/Role/querys-delete-role";
-import { InfoRole, PermissionsQuery, RolesQuery } from "../helpers/Role/querys-get-role";
+import { InfoRole, PermissionsQuery, RolesAllQuery, RolesQuery } from "../helpers/Role/querys-get-role";
 import { AsignPermissionHasRoleQuery, CreateRoleQuery } from "../helpers/Role/querys-post-role";
 
 export const RolesService = async (props: any) => {
@@ -78,4 +78,9 @@ export const UpdatePermissionsRoleService = async (props: any) => {
     )
 
     return;
+}
+
+export const RolesAllService = async () => {
+    const roles = await RolesAllQuery()
+    return roles;
 }

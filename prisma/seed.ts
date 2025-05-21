@@ -19,6 +19,7 @@ async function main() {
             { name: 'VIEW_ORDER', description: 'Ver la lista ordenes' },
             // Ususarios
             { name: 'VIEW_USER', description: 'Ver la lista de usuarios' },
+            { name: 'EDIT_USER', description: 'Editar rol de usuario' },
             // Roles
             { name: 'VIEW_ROLE', description: 'Ver la lista de roles' },
             { name: 'ADD_ROLE', description: 'Agregar roles' },
@@ -98,7 +99,7 @@ async function main() {
     )
 
     // 6. Agregar al usuario administrador
-    const user = await prisma.user.upsert({
+    await prisma.user.upsert({
         where: { email: 'ADMIN@ADMIN.COM' },
         update: {},
         create: {
@@ -111,6 +112,23 @@ async function main() {
             birthdate: new Date('1999-09-14'),
             password: await bcrypt.hash('SG9sYU11bmRv*', 10),
             roleId: adminRole.id,
+        }
+    })
+
+    // Agregar usuario de prueba
+    await prisma.user.upsert({
+        where: { email: 'pablo@pablo.com' },
+        update: {},
+        create: {
+            name: 'PABLO',
+            lastname: 'VAZQUEZ REYES',
+            gender: 'MASCULINO',
+            email: 'PABLO@PABLO.COM',
+            address: 'NUEVO LEON #1306',
+            phone: 226104835,
+            birthdate: new Date('1999-09-14'),
+            password: await bcrypt.hash('SG9sYU11bmRv*', 10),
+            roleId: userRole.id,
         }
     })
 
