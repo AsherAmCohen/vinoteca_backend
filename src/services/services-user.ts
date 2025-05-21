@@ -5,6 +5,8 @@ import { SignInServiceProps, SignUpServiceProps, UserInformationServiceProps } f
 import jwt from "jsonwebtoken"
 import { CreateShoppingCartQuery } from "../helpers/ShoppingCart/querys-post-shoppingCart";
 
+const SECRET_KEY = `${process.env.SECRET_KEY}`
+
 export const SignUpService = async (props: SignUpServiceProps) => {
     let { email, password, birthdate, phone, gender, address, name, lastname, ...rest } = props;
 
@@ -65,8 +67,6 @@ export const SignInService = async (props: SignInServiceProps) => {
     if (!passwordMatch) {
         throw new Error('Contraseña incorrecta')
     }
-
-    const SECRET_KEY = `${process.env.SECRET_KEY}`
 
     // Rol
     const role = user.Role.name
@@ -137,7 +137,7 @@ export const UsersRegisterService = async (props: any) => {
         take: Number(rowsPerPage),
         email: email.toUpperCase()
     }
-    
+
     const data: any = await UsersRegisterQuery(transformData)
 
     const { users, count } = data
