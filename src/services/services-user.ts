@@ -1,4 +1,4 @@
-import { CheckEmailQuery, UserInformationQuery, UsersRegisterAllQuery } from "../helpers/User/querys-get-user";
+import { CheckEmailQuery, UserInformationQuery, UsersRegisterQuery } from "../helpers/User/querys-get-user";
 import { SignUpQuery } from "../helpers/User/querys-post-user";
 import bcrypt from 'bcrypt';
 import { SignInServiceProps, SignUpServiceProps, UserInformationServiceProps } from "../interfaces/interfaces-user";
@@ -129,7 +129,7 @@ export async function UserInformationService(props: UserInformationServiceProps)
     }
 }
 
-export const UsersRegisterAllService = async (props: any) => {
+export const UsersRegisterService = async (props: any) => {
     const { page, rowsPerPage, email } = props
 
     const transformData: any = {
@@ -138,7 +138,7 @@ export const UsersRegisterAllService = async (props: any) => {
         email: email.toUpperCase()
     }
     
-    const data: any = await UsersRegisterAllQuery(transformData)
+    const data: any = await UsersRegisterQuery(transformData)
 
     const { users, count } = data
 

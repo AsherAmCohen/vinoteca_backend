@@ -7,7 +7,6 @@ export const CreateMarkController: RequestHandler = async (request, response) =>
         response.json({
             status: 'success',
             msg: 'Marca almacenada',
-            data: ''
         })
     } catch (error: any) {
         response.status(500)

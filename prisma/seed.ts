@@ -10,10 +10,11 @@ async function main() {
             // Vistas
             { name: 'VIEW_PROFILE', description: 'Ver la información del usuario' },
             { name: 'VIEW_WINE', description: 'Ver la lista de vinos' },
-            { name: 'VIEW_MARK', description: 'Ver la de marcas' },
+            { name: 'VIEW_MARK', description: 'Ver la lista de marcas' },
             { name: 'VIEW_CATEGORY', description: 'Ver la lista de categorias' },
             { name: 'VIEW_ORDER', description: 'Ver la lista ordenes' },
-            { name: 'VIEW_USER', description: 'Ver la de usuarios' },
+            { name: 'VIEW_USER', description: 'Ver la lista de usuarios' },
+            { name: 'VIEW_ROLE', description: 'Ver la lista de roles' },
             // Agregar
             { name: 'EDIT_WINE', description: 'Editar vinos' },
         ],

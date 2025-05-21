@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import { SignInService, SignUpService, UserInformationService, UsersRegisterAllService } from "../services/services-user";
+import { SignInService, SignUpService, UserInformationService, UsersRegisterService } from "../services/services-user";
 
 export const SignUpController: RequestHandler = async (request, response) => {
     try {
@@ -54,9 +54,9 @@ export const UserInformationController: RequestHandler = async (request, respons
     }
 }
 
-export const UsersRegisterAllController: RequestHandler = async (request, response) => {
+export const UsersRegisterController: RequestHandler = async (request, response) => {
     try { 
-        const users = await UsersRegisterAllService(request.query)
+        const users = await UsersRegisterService(request.query)
         response.json({
             status: 'success',
             msg: 'Información obtenida',

@@ -51,7 +51,7 @@ export const UserInformationQuery = (email: string) => {
 }
 
 
-export const UsersRegisterAllQuery = (props: any) => {
+export const UsersRegisterQuery = (props: any) => {
     return new Promise(async (resolve, reject) => {
         try {
             const { skip, take, email } = props;
@@ -71,7 +71,13 @@ export const UsersRegisterAllQuery = (props: any) => {
                 take
             })
 
-            const count = await database.user.count()
+            const count = await database.user.count({
+                where: {
+                    NOT: {
+                        email
+                    }
+                }
+            })
 
             resolve({ users: users, count: count })
         } catch {

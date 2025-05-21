@@ -4,6 +4,7 @@ import RouterWine from './routes-wines'
 import RouterMark from './routes-mark'
 import RouterCategory from './routes-category'
 import RouterShoppingCart from './routes-shoppingCart'
+import RouterRole from './routes-role'
 
 const router: Router = Router()
 
@@ -21,5 +22,6 @@ router.use('/wine', RouterWine)
 router.use('/mark', RouterMark)
 router.use('/category', RouterCategory)
 router.use('/shoppingCart', RouterShoppingCart)
+router.use('/role', RouterRole)
 
 module.exports = router;
