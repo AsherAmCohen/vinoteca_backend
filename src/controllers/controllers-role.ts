@@ -1,9 +1,9 @@
 import { RequestHandler } from "express";
-import { PermissionsService, RolesService } from "../services/services-role";
+import { CreateRoleService, PermissionsService, RolesService, UpdatePermissionsRoleService } from "../services/services-role";
 
 export const RolesController: RequestHandler = async (request, response) => {
     try {
-        const roles = await RolesService();
+        const roles = await RolesService(request.query);
         response.json({
             status: 'success',
             msg: 'Roles obtenidos',
@@ -38,7 +38,7 @@ export const PermissionsController: RequestHandler = async(request, response) =>
 
 export const CreateRoleController: RequestHandler = async(request, response) => {
     try {
-        console.log(request.body)
+        await CreateRoleService(request.body)
         response.json({
             status: 'success',
             msg: 'Rol creado'
@@ -48,6 +48,22 @@ export const CreateRoleController: RequestHandler = async(request, response) => 
         .send({
             status: 'error',
             msg: error.message || 'Crear nuevo rol'
+        })
+    }
+}
+
+export const UpdatePermissionsRoleController: RequestHandler = async(request, response) => {
+    try {
+        await UpdatePermissionsRoleService(request.body)
+        response.json({
+            sttus: 'success',
+            msg: 'Rol modificado'
+        })
+    } catch (error: any) {
+        response.status(500)
+        .send({
+            status: 'error',
+            msg: error.message || 'Modificar rol'
         })
     }
 }
