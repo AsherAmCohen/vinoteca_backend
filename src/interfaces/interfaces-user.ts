@@ -18,6 +18,8 @@ export interface SignUpQueryProps {
     phone: number;
     birthdate: Date;
     password: string;
+    verificationToken: string;
+    tokenExpires: Date;
 }
 
 export interface SignInServiceProps {

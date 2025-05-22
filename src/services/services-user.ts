@@ -1,12 +1,118 @@
-import { CheckEmailQuery, UserInformationQuery, UsersRegisterQuery } from "../helpers/User/querys-get-user";
+import { CheckEmailQuery, UserInformationQuery, UserInformationTokenQuery, UsersRegisterQuery } from "../helpers/User/querys-get-user";
 import { SignUpQuery } from "../helpers/User/querys-post-user";
 import bcrypt from 'bcrypt';
 import { SignInServiceProps, SignUpServiceProps, UserInformationServiceProps } from "../interfaces/interfaces-user";
 import jwt from "jsonwebtoken"
 import { CreateShoppingCartQuery } from "../helpers/ShoppingCart/querys-post-shoppingCart";
-import { UpdateRoleQuery } from "../helpers/User/querys-put-user";
+import { UpdateRoleQuery, VerifiedUserQuery } from "../helpers/User/querys-put-user";
+import { DeleteUserQuery } from "../helpers/User/querys-delete-users";
+import crypto from 'crypto';
+import nodemailer from 'nodemailer';
+import type { Transporter } from 'nodemailer'
+import path from "path";
 
 const SECRET_KEY = `${process.env.SECRET_KEY}`
+const EMAIL_USER = `${process.env.EMAIL_USER}`
+const EMAIL_PASS = `${process.env.EMAIL_PASS}`
+const FRONTEND = `${process.env.FRONTEND_URL}`
+
+const sendEmail = async (email: string, token: string) => {
+    const transporter: Transporter = nodemailer.createTransport({
+        host: 'smtp.gmail.com',
+        port: 465,
+        secure: true, // true para 465, false para 587
+        auth: {
+            user: EMAIL_USER, // tu-email@gmail.com
+            pass: EMAIL_PASS  // contraseña de aplicación (NO tu contraseña real)
+        }
+    })
+
+    const htmlContent = `
+                            <!DOCTYPE html>
+                            <html>
+                            <body style="margin: 0; padding: 0; font-family: sans-serif; background-color: #f7f7f7;">
+                                <table width="100%" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td align="center">
+                                    <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; padding: 40px;">
+                                        <tr>
+                                        <td align="center">
+                                            <img
+                                            src="cid:logo"
+                                            alt="Logo"
+                                            width="150"
+                                            style="display: block; margin: 0 auto;"
+                                            />
+                                        </td>
+                                        </tr>
+                                        <tr>
+                                        <td align="center" style="padding: 20px 0;">
+                                            <h2 style="margin: 0; color: #333;">¡Bienvenido a Vinoteca!</h2>
+                                        </td>
+                                        </tr>
+                                        <tr>
+                                        <td align="center" style="padding: 10px 20px; color: #555;">
+                                            Por favor verifica tu correo electrónico para activar tu cuenta.
+                                        </td>
+                                        </tr>
+                                        <tr>
+                                        <td align="center" style="padding: 30px 0;">
+                                            <a
+                                            href="${FRONTEND}/verify-email?token=${token}"
+                                            style="background-color: #8B0000; color: #fff; padding: 12px 24px; text-decoration: none; border-radius: 4px;"
+                                            >
+                                            Verificar cuenta
+                                            </a>
+                                        </td>
+                                        </tr>
+                                        <tr>
+                                        <td align="center" style="padding-top: 30px; color: #999; font-size: 12px;">
+                                            © 2025 Vinoteca. Todos los derechos reservados.
+                                        </td>
+                                        </tr>
+                                    </table>
+                                    </td>
+                                </tr>
+                                </table>
+                            </body>
+                            </html>
+                            `
+
+    await transporter.sendMail({
+        from: '"Vinoteca" <no-reply@vinoteca.com>',
+        to: email,
+        subject: 'Verifica tu cuenta',
+        html: htmlContent,
+        attachments: [
+            {
+                filename: 'logo.png',
+                path: path.join(__dirname, '../../public/logo.png'),
+                cid: 'logo', // debe coincidir con src="cid:logo"
+            },
+        ],
+    })
+}
+
+const generateVerificationToken = () => {
+    return crypto.randomBytes(32).toString('hex')
+}
+
+const fechaLegible = (date: string) => {
+    if (!date) {
+        return null;
+    }
+
+    const createdAt = new Date(date)
+    const ReadableDate = createdAt.toLocaleString('es-ES', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    })
+
+    return ReadableDate
+}
 
 export const SignUpService = async (props: SignUpServiceProps) => {
     let { email, password, birthdate, phone, gender, address, name, lastname, ...rest } = props;
@@ -26,6 +132,11 @@ export const SignUpService = async (props: SignUpServiceProps) => {
     // Dar formato al número telefonico
     const phoneFormatted = parseInt(phone.replace(/\s+/g, ''));
 
+    // Creación de token para verificar la cuenta
+    const token = generateVerificationToken()
+    // Crear fecha de expiración del token de 1 hora
+    const expires = new Date(Date.now() + 1000 * 60 * 60)
+
     // Transformar en mayusculas para facilitar la comparación
     const transformData = {
         ...rest,
@@ -34,14 +145,17 @@ export const SignUpService = async (props: SignUpServiceProps) => {
         address: address.toUpperCase(),
         name: name.toUpperCase(),
         lastname: lastname.toUpperCase(),
-    };
-
-    const user: any = await SignUpQuery({
-        ...transformData,
+        verificationToken: token,
+        tokenExpires: expires,
         phone: phoneFormatted,
         birthdate: birthDateFormatted,
         password: hashedPassword,
-    });
+    };
+
+    const user: any = await SignUpQuery(transformData);
+
+    // Enviar correo de verificacion
+    await sendEmail(user.email, user.verificationToken)
 
     // Tambien se crea el carrito
     await CreateShoppingCartQuery(user.id)
@@ -146,22 +260,15 @@ export const UsersRegisterService = async (props: any) => {
     const AllUsers: any = [];
 
     users.map((user: any) => {
-        const createdAt = new Date(user.createdAt)
-        const readableDate = createdAt.toLocaleString('es-ES', {
-            day: '2-digit',
-            month: 'long',
-            year: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-        })
-
         const Data = {
             id: user.id,
             name: user.name,
             lastname: user.lastname,
             email: user.email,
             role: user.Role,
-            createdAt: readableDate
+            createdAt: fechaLegible(user.createdAt),
+            deletedAt: fechaLegible(user.deletedAt),
+            verifiedAt: fechaLegible(user.verifiedAt)
         }
 
         AllUsers.push(Data)
@@ -181,6 +288,49 @@ export const UpdateRoleService = async (props: any) => {
     }
 
     await UpdateRoleQuery(transformData)
+
+    return;
+}
+
+export const DeleteUserService = async (props: any) => {
+    const { userId } = props;
+
+    const transformData: any = {
+        id: parseInt(userId)
+    }
+
+    await DeleteUserQuery(transformData)
+
+    return
+}
+
+export const VerifiedUserService = async (props: any) => {
+    const { token } = props
+
+
+    if (!token) {
+        throw new Error('No se ha proporcionado un token')
+    }
+
+    // Obtener información del suario
+    const user: any = await UserInformationTokenQuery(token)
+
+    // Comprobar si el usuario existe 
+    if(!user) {
+        throw new Error('El usuario no existe')
+    }
+
+    // Comprobar si el usuario no fue eliminado
+    if(user.deletedAt) {
+        throw new Error('El usuario fue eliminado')
+    }
+
+    // Comprobar si el usuario ya fue verificado
+    if (user.verifiedAt) {
+        throw new Error('El usuario ya fue verificado')
+    }
+
+    await VerifiedUserQuery(token)
 
     return;
 }

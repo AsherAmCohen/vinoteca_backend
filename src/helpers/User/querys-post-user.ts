@@ -4,7 +4,7 @@ import { SignUpQueryProps } from "../../interfaces/interfaces-user"
 export const SignUpQuery = (props: SignUpQueryProps) => {
     return new Promise(async(resolve, reject) => {
         try {
-            const {name, lastname, gender, email, address, phone, birthdate, password} = props
+            const {name, lastname, gender, email, address, phone, birthdate, password, verificationToken, tokenExpires} = props
 
             // Obtener el rol USER
             const userRole: any = await database.role.findUnique({
@@ -23,9 +23,12 @@ export const SignUpQuery = (props: SignUpQueryProps) => {
                     phone, 
                     birthdate,
                     password,
+                    verificationToken,
+                    tokenExpires,
                     roleId: userRole.id
                 }
             })
+            
             resolve(user)
         } catch (error) {
             console.error(error)

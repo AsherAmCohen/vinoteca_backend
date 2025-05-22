@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import { SignInService, SignUpService, UpdateRoleService, UserInformationService, UsersRegisterService } from "../services/services-user";
+import { DeleteUserService, SignInService, SignUpService, UpdateRoleService, UserInformationService, UsersRegisterService, VerifiedUserService } from "../services/services-user";
 
 export const SignUpController: RequestHandler = async (request, response) => {
     try {
@@ -83,6 +83,38 @@ export const UpdateRoleController: RequestHandler = async (request, response) =>
             .send({
                 status: 'error',
                 msg: error.message || 'No se ha actualizado el rol'
+            })
+    }
+}
+
+export const DeleteUserController: RequestHandler = async (request, response) => {
+    try {
+        await DeleteUserService(request.body)
+        response.json({
+            status: 'success',
+            msg: 'Usuario eliminado'
+        })
+    } catch (error: any) {
+        response.status(500)
+            .send({
+                status: 'error',
+                msg: error.message || 'No se ha eliminado el usuario'
+            })
+    }
+}
+
+export const VerifiedUserController: RequestHandler = async (request, response) => {
+    try {
+        await VerifiedUserService(request.body)
+        response.json({
+            status: 'success',
+            msg: 'Se ah validado el usuario'
+        })
+    } catch (error: any) {
+        response.status(500)
+            .send({
+                status: 'error',
+                msg: error.message || 'No se ha verificado el usuario'
             })
     }
 }

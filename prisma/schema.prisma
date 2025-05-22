@@ -8,24 +8,26 @@ datasource db {
 }
 
 model User {
-  id           Int           @id @default(autoincrement())
-  name         String        @db.VarChar(45)
-  lastname     String        @db.VarChar(45)
-  gender       String        @db.VarChar(45)
-  email        String        @unique @db.VarChar(45)
-  address      String        @db.VarChar(100)
-  phone        Int
-  birthdate    DateTime      @db.Date
-  password     String        @db.Text
-  createdAt    DateTime      @default(now()) @db.DateTime(0)
-  verifiedAt   DateTime?     @db.DateTime(0)
-  updatedAt    DateTime?     @db.DateTime(0)
-  deletedAt    DateTime?     @db.DateTime(0)
+  id                Int           @id @default(autoincrement())
+  name              String        @db.VarChar(45)
+  lastname          String        @db.VarChar(45)
+  gender            String        @db.VarChar(45)
+  email             String        @unique @db.VarChar(45)
+  address           String        @db.VarChar(100)
+  phone             Int
+  birthdate         DateTime      @db.Date
+  password          String        @db.Text
+  verificationToken String?       @unique
+  tokenExpires      DateTime?
+  createdAt         DateTime      @default(now()) @db.DateTime(0)
+  verifiedAt        DateTime?     @db.DateTime(0)
+  updatedAt         DateTime?     @db.DateTime(0)
+  deletedAt         DateTime?     @db.DateTime(0)
   // Permisos
-  Role         Role          @relation(fields: [roleId], references: [id])
-  roleId       Int
+  Role              Role          @relation(fields: [roleId], references: [id])
+  roleId            Int
   // Carrito de compras
-  shoppingCart ShoppingCart?
+  shoppingCart      ShoppingCart?
 }
 
 model Wine {

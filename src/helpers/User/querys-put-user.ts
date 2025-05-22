@@ -18,3 +18,22 @@ export const UpdateRoleQuery = (props: any) => {
         }
     })
 }
+
+export const VerifiedUserQuery = (verificationToken: string) => {
+    return new Promise(async(resolve, reject) => {
+        try {
+            await database.user.update({
+                where: {
+                    verificationToken
+                },
+                data: {
+                    verifiedAt: new Date()
+                }
+            })
+
+            resolve(true)
+        } catch {
+            reject(false)
+        }
+    })
+}

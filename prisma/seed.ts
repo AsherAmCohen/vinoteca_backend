@@ -21,6 +21,7 @@ async function main() {
             // Ususarios
             { name: 'VIEW_USER', description: 'Ver la lista de usuarios' },
             { name: 'EDIT_USER', description: 'Editar rol de usuario' },
+            { name: 'DELETE_USER', description: 'Elimina usuarios registrados' },
             // Roles
             { name: 'VIEW_ROLE', description: 'Ver la lista de roles' },
             { name: 'ADD_ROLE', description: 'Agregar roles' },

@@ -17,6 +17,8 @@ export const authorize = (requiredPermissions: string[]) => {
 
         if (!hasPermission) {
             response.status(403).json({ msg: 'No tienes los suficientes permisos' })
+
+            return;
         }
 
         next();

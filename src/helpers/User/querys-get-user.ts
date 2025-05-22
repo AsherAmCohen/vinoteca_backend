@@ -50,6 +50,22 @@ export const UserInformationQuery = (email: string) => {
     })
 }
 
+export const UserInformationTokenQuery = (verificationToken: any) => {
+    return new Promise(async(resolve, reject) => {
+        try {
+            const user = await database.user.findUnique({
+                where: {
+                    verificationToken
+                }
+            })
+            
+            resolve(user)
+        } catch {
+            reject(false)
+        }
+    })
+}
+
 
 export const UsersRegisterQuery = (props: any) => {
     return new Promise(async (resolve, reject) => {
