@@ -15,6 +15,7 @@ async function main() {
             { name: 'VIEW_MARK', description: 'Ver la lista de marcas' },
             // Categorias
             { name: 'VIEW_CATEGORY', description: 'Ver la lista de categorias' },
+            { name: 'EDIT_CATEGORY', description: 'Editar categorias' },
             // Ordenes
             { name: 'VIEW_ORDER', description: 'Ver la lista ordenes' },
             // Ususarios

@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import { SignInService, SignUpService, UserInformationService, UsersRegisterService } from "../services/services-user";
+import { SignInService, SignUpService, UpdateRoleService, UserInformationService, UsersRegisterService } from "../services/services-user";
 
 export const SignUpController: RequestHandler = async (request, response) => {
     try {
@@ -55,7 +55,7 @@ export const UserInformationController: RequestHandler = async (request, respons
 }
 
 export const UsersRegisterController: RequestHandler = async (request, response) => {
-    try { 
+    try {
         const users = await UsersRegisterService(request.query)
         response.json({
             status: 'success',
@@ -64,9 +64,25 @@ export const UsersRegisterController: RequestHandler = async (request, response)
         })
     } catch (error: any) {
         response.status(500)
-        .send({
-            status: 'error',
-            msg: error.message || 'No se han obtenidos los usuarios registrados',
+            .send({
+                status: 'error',
+                msg: error.message || 'No se han obtenidos los usuarios registrados',
+            })
+    }
+}
+
+export const UpdateRoleController: RequestHandler = async (request, response) => {
+    try {
+        await UpdateRoleService(request.body)
+        response.json({
+            status: 'success',
+            msg: 'Actualizar información del usuario'
         })
+    } catch (error: any) {
+        response.status(500)
+            .send({
+                status: 'error',
+                msg: error.message || 'No se ha actualizado el rol'
+            })
     }
 }

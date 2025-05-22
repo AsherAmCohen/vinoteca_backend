@@ -4,6 +4,7 @@ import bcrypt from 'bcrypt';
 import { SignInServiceProps, SignUpServiceProps, UserInformationServiceProps } from "../interfaces/interfaces-user";
 import jwt from "jsonwebtoken"
 import { CreateShoppingCartQuery } from "../helpers/ShoppingCart/querys-post-shoppingCart";
+import { UpdateRoleQuery } from "../helpers/User/querys-put-user";
 
 const SECRET_KEY = `${process.env.SECRET_KEY}`
 
@@ -91,7 +92,7 @@ export const SignInService = async (props: SignInServiceProps) => {
     }
 }
 
-export const UserInformationService = async(props: UserInformationServiceProps) => {
+export const UserInformationService = async (props: UserInformationServiceProps) => {
     let { email } = props
 
     // Comprobar si se envio un correo
@@ -169,4 +170,17 @@ export const UsersRegisterService = async (props: any) => {
     const sendData = { users: AllUsers, count: count }
 
     return sendData
+}
+
+export const UpdateRoleService = async (props: any) => {
+    const { userId, role } = props
+
+    const transformData = {
+        id: parseInt(userId),
+        roleId: parseInt(role.id)
+    }
+
+    await UpdateRoleQuery(transformData)
+
+    return;
 }
