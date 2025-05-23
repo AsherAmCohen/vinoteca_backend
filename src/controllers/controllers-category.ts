@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import { CategorysAllService, CategorysService, CreateCategoryService } from "../services/services-category";
+import { CategorysAllService, CategorysService, CreateCategoryService, UpdateCategoryService } from "../services/services-category";
 
 export const CreateCategoryController: RequestHandler = async (request, response) => {
     try {
@@ -48,6 +48,22 @@ export const CategorysController: RequestHandler = async (request, response) => 
             .send({
                 status: 'error',
                 msg: error.message || 'Error al obtener las categorias'
+            })
+    }
+}
+
+export const UpdateCategoryController: RequestHandler = async (request, response) => {
+    try {
+        await UpdateCategoryService(request.body)
+        response.json({
+            status: 'success',
+            msg: 'Categoria actualizada'
+        })
+    } catch (error: any) {
+        response.status(500)
+            .send({
+                status: 'error',
+                msg: error.message || 'Error al actualizar la categoria'
             })
     }
 }

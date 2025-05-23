@@ -10,6 +10,7 @@ import crypto from 'crypto';
 import nodemailer from 'nodemailer';
 import type { Transporter } from 'nodemailer'
 import path from "path";
+import { InfoRoleWhereName } from "../helpers/Role/querys-get-role";
 
 const SECRET_KEY = `${process.env.SECRET_KEY}`
 const EMAIL_USER = `${process.env.EMAIL_USER}`
@@ -134,8 +135,12 @@ export const SignUpService = async (props: SignUpServiceProps) => {
 
     // Creación de token para verificar la cuenta
     const token = generateVerificationToken()
+
     // Crear fecha de expiración del token de 1 hora
     const expires = new Date(Date.now() + 1000 * 60 * 60)
+
+    // Obtener el rol de invitado
+    const role: any = await InfoRoleWhereName('GUEST')
 
     // Transformar en mayusculas para facilitar la comparación
     const transformData = {
@@ -150,6 +155,7 @@ export const SignUpService = async (props: SignUpServiceProps) => {
         phone: phoneFormatted,
         birthdate: birthDateFormatted,
         password: hashedPassword,
+        roleId: role.id
     };
 
     const user: any = await SignUpQuery(transformData);
@@ -174,6 +180,11 @@ export const SignInService = async (props: SignInServiceProps) => {
 
     if (!user) {
         throw new Error('Correo electronicó no registrado')
+    }
+
+    // Comprobar si esta eliminado
+    if(user.deletedAt) {
+        throw new Error('Cuenta desactivada, si considera que fue un error contacte con el administrador')
     }
 
     // Comparar contraseña
@@ -332,7 +343,10 @@ export const VerifiedUserService = async (props: any) => {
         throw new Error('El usuario ya fue verificado')
     }
 
-    await VerifiedUserQuery(token)
+    // Buscar el role de usuario para cambiarlo si ya valido su correo
+    const role: any = await InfoRoleWhereName('USER')
+
+    await VerifiedUserQuery(token, role.id)
 
     return;
 }

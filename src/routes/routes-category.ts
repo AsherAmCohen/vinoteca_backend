@@ -1,10 +1,12 @@
 import { Router } from "express";
-import { CategorysAllController, CategorysController, CreateCategoryController } from "../controllers/controllers-category";
+import { CategorysAllController, CategorysController, CreateCategoryController, UpdateCategoryController } from "../controllers/controllers-category";
+import { authorize } from "../middlewares/permission-middleware";
 
 const router: Router = Router();
 
-router.post('/create', CreateCategoryController)
+router.post('/create', authorize(['ADD_CATEGORY']), CreateCategoryController)
 router.get('/all', CategorysAllController)
-router.get('/categorys', CategorysController)
+router.get('/categorys', authorize(['VIEW_CATEGORY']), CategorysController)
+router.put('/update', authorize(['EDIT_CATEGORY']), UpdateCategoryController)
 
 export default router

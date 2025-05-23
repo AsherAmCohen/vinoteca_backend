@@ -20,6 +20,7 @@ export interface SignUpQueryProps {
     password: string;
     verificationToken: string;
     tokenExpires: Date;
+    roleId: number
 }
 
 export interface SignInServiceProps {

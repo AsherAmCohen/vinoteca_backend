@@ -67,3 +67,19 @@ export const RolesAllQuery = () => {
         }
     })
 }
+
+export const InfoRoleWhereName = (name: string) => {
+    return new Promise(async(resolve, reject) => {
+        try {
+            const role = await database.role.findUnique({
+                where: {
+                    name
+                }
+            })
+
+            resolve(role)
+        } catch {
+            reject([])
+        }
+    })
+}
