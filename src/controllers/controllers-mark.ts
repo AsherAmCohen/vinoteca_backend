@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import { CreateMarkService, MarksAllService, MarksService, } from "../services/services-mark";
+import { CreateMarkService, MarksAllService, MarksService, UpdateMarkService, } from "../services/services-mark";
 
 export const CreateMarkController: RequestHandler = async (request, response) => {
     try {
@@ -47,6 +47,23 @@ export const MarksController: RequestHandler = async (request, response) => {
         .send({
             status: 'error',
             msg: error.message || 'Error al obtener marcas'
+        })
+    }
+}
+
+export const UpdateMarkController: RequestHandler = async (request, response) => {
+    try {
+        await UpdateMarkService(request.body)
+        response.json({
+            ststus: 'success',
+            msg: 'Marca actualizada'
+        })
+
+    } catch (error: any) {
+        response.status(500)
+        .send({
+            status: 'error',
+            msg: error.message || 'Error al actualizar la marca'
         })
     }
 }

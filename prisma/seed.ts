@@ -5,7 +5,7 @@ const prisma = new PrismaClient()
 
 async function main() {
     // 1. Crear permisos
-    const permissions = await prisma.permission.createMany({
+    await prisma.permission.createMany({
         data: [
             // Perfiles
             { name: 'VIEW_PROFILE', description: 'Ver la información del usuario' },
@@ -13,10 +13,12 @@ async function main() {
             { name: 'VIEW_WINE', description: 'Ver la lista de vinos' },
             // Marcas
             { name: 'VIEW_MARK', description: 'Ver la lista de marcas' },
+            { name: 'ADD_MARK', description: 'Agregar marca' },
+            { name: 'EDIT_MARK', description: 'Editar marca' },
             // Categorias
             { name: 'VIEW_CATEGORY', description: 'Ver la lista de categorias' },
-            { name: 'ADD_CATEGORY', description: 'Editar categorias' },
-            { name: 'EDIT_CATEGORY', description: 'Editar categorias' },
+            { name: 'ADD_CATEGORY', description: 'Agregar categoria' },
+            { name: 'EDIT_CATEGORY', description: 'Editar categoria' },
             // Ordenes
             { name: 'VIEW_ORDER', description: 'Ver la lista ordenes' },
             // Ususarios
