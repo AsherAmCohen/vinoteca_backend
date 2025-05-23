@@ -53,8 +53,6 @@ export const CreateRoleService = async (props: any) => {
         )
     )
 
-    console.log(role)
-
     return;
 }
 

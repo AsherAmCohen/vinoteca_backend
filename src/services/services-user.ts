@@ -201,9 +201,8 @@ export const SignInService = async (props: SignInServiceProps) => {
         expiresIn: '1h'
     })
 
-    return {
-        token
-    }
+    return ({token: token})
+    
 }
 
 export const UserInformationService = async (props: UserInformationServiceProps) => {
@@ -233,15 +232,18 @@ export const UserInformationService = async (props: UserInformationServiceProps)
         timeZone: 'UTC'
     })
 
-    return {
+    const dataUser = {
         name: userInfo.name,
         lastname: userInfo.lastname,
         gender: userInfo.gender,
         email: userInfo.email,
         address: userInfo.address,
         phone: userInfo.phone,
+        verifiedAt: userInfo.verifiedAt,
         birthdate: legible.toUpperCase()
     }
+
+    return dataUser
 }
 
 export const UsersRegisterService = async (props: any) => {

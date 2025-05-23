@@ -50,10 +50,20 @@ async function main() {
         }
     })
 
-    // 3. Obtener todos los permisos
+    // 4. Crear role GUEST (Invitado)
+    const guestRole = await prisma.role.upsert({
+        where: { name: 'GUEST' },
+        update: {},
+        create: {
+            name: 'GUEST',
+            description: 'Usuario invitado o no verificado'
+        }
+    })
+
+    // 5. Obtener todos los permisos
     const allPermissions = await prisma.permission.findMany()
 
-    // 4. Asignar todos los permisos al rol ADMIN
+    // 6. Asignar todos los permisos al rol ADMIN
     await Promise.all(
         allPermissions.map(permission =>
             prisma.permission_has_Role.upsert({
@@ -72,7 +82,7 @@ async function main() {
         )
     )
 
-    // 5. Buscar los permisos del usuario USER
+    // 7. Buscar los permisos del rol USER
     const userPermissions = await prisma.permission.findMany({
         where: {
             name: {
@@ -81,7 +91,7 @@ async function main() {
         }
     })
 
-    // 6. Asignar los permisos al rol
+    // 8. Asignar los permisos al rol administrador
     await Promise.all(
         userPermissions.map(permission =>
             prisma.permission_has_Role.upsert({
@@ -100,7 +110,35 @@ async function main() {
         )
     )
 
-    // 6. Agregar al usuario administrador
+    // 9. Buscar los permisos del rol GUEST
+    const guestPermissions = await prisma.permission.findMany({
+        where: {
+            name: {
+                in: ['VIEW_PROFILE']
+            }
+        }
+    })
+
+    // 10. Asignar los permisos al rol GUEST (Invitado)
+    await Promise.all(
+        guestPermissions.map(permission =>
+            prisma.permission_has_Role.upsert({
+                where: {
+                    roleId_permissionId: {
+                        roleId: guestRole.id,
+                        permissionId: permission.id
+                    }
+                },
+                update: {},
+                create: {
+                    roleId: guestRole.id,
+                    permissionId: permission.id
+                }
+            })
+        )
+    )
+
+    // 11. Agregar al usuario administrador
     await prisma.user.upsert({
         where: { email: 'ADMIN@ADMIN.COM' },
         update: {},
@@ -113,13 +151,14 @@ async function main() {
             phone: 123456789,
             birthdate: new Date('1999-09-14'),
             password: await bcrypt.hash('SG9sYU11bmRv*', 10),
+            verifiedAt: new Date(),
             roleId: adminRole.id,
         }
     })
 
-    // Agregar usuario de prueba
+    // 12. Agregar usuario de prueba
     await prisma.user.upsert({
-        where: { email: 'pablo@pablo.com' },
+        where: { email: 'PABLO@PABLO.COM' },
         update: {},
         create: {
             name: 'PABLO',
@@ -134,10 +173,16 @@ async function main() {
         }
     })
 
-    // 7. Agregar el carrito inicial al administrador
+    // 13. Agregar el carrito inicial al administrador
     await prisma.shoppingCart.create({
         data: {
             userId: adminRole.id
+        }
+    })
+
+    await prisma.shoppingCart.create({
+        data: {
+            userId: userRole.id
         }
     })
 }
