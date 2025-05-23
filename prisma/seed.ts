@@ -11,6 +11,8 @@ async function main() {
             { name: 'VIEW_PROFILE', description: 'Ver la información del usuario' },
             // Vinos
             { name: 'VIEW_WINE', description: 'Ver la lista de vinos' },
+            { name: 'ADD_WINE', description: 'Agregar vino' },
+            { name: 'EDIT_WINE', description: 'Editar vino' },
             // Marcas
             { name: 'VIEW_MARK', description: 'Ver la lista de marcas' },
             { name: 'ADD_MARK', description: 'Agregar marca' },

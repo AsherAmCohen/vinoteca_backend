@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import { StoreWineService, WineImageService, WinesService } from "../services/services-wine";
+import { StoreWineService, UpdateWineService, WineImageService, WinesService } from "../services/services-wine";
 
 export const StoreWineController: RequestHandler = async (request, response) => {
     try {
@@ -45,6 +45,22 @@ export const WineImageController: RequestHandler = async (request, response) => 
         .send({
             status: 'error',
             msg: error.message || 'No se ha recuperado la imagen del vino'
+        })
+    }
+}
+
+export const UpdateWineController: RequestHandler = async (request, response) => {
+    try {
+        await UpdateWineService(request.body)
+        response.json({
+            staus: 'success',
+            msg: 'Vino actualizado'
+        })
+    } catch (error: any) {
+        response.status(500)
+        .send({
+            status: 'error',
+            msg: error.message || 'No se actualizo el vino'
         })
     }
 }

@@ -19,7 +19,7 @@ router.get('/', (_resquest, response) => {
 })
 
 router.use('/user', verifyInternalApiKey, RoutesUser)
-router.use('/wine', verifyInternalApiKey, RouterWine)
+router.use('/wine', RouterWine)
 router.use('/mark', verifyInternalApiKey, authenticateToken, RouterMark)
 router.use('/category', verifyInternalApiKey, authenticateToken, RouterCategory)
 router.use('/shoppingCart', verifyInternalApiKey, authenticateToken, RouterShoppingCart)

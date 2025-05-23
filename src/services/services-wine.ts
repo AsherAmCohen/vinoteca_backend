@@ -3,10 +3,18 @@ import { WinesQuery } from "../helpers/Wine/querys-get-wine";
 import { StoreWineQuery } from "../helpers/Wine/querys-post-wine";
 import { StoreWineServiceProps, WineImageServiceProps, WinesServiceProps } from "../interfaces/interfaces-wine";
 import fs from 'fs';
-import { CreateMarkService } from "./services-mark";
-import { skip } from "@prisma/client/runtime/library";
+import { UpdateWineQuery } from "../helpers/Wine/querys-put-wines";
 
-function formatEuro(num: number) {
+const formatFloat = (num: string) => {
+    const format = num
+        .replace(/[€\s]/g, '') // elimina € y espacios
+        .replace(/\./g, '')    // elimina puntos (miles)
+        .replace(',', '.');    // cambia coma por punto (decimales)
+
+    return parseFloat(format)
+}
+
+const formatEuro = (num: number) => {
     return '€' + num
         .toFixed(2)                 // "1234.56"
         .replace('.', ',')         // "1234,56"
@@ -14,16 +22,7 @@ function formatEuro(num: number) {
 }
 
 export const StoreWineService = async (data: StoreWineServiceProps) => {
-    let { price, name, mark, category, ...rest } = data
-
-
-    // Cambiar el formato del precio
-    price = price
-        .replace(/[€\s]/g, '') // elimina € y espacios
-        .replace(/\./g, '')    // elimina puntos (miles)
-        .replace(',', '.');    // cambia coma por punto (decimales)
-
-    const floatPrice = parseFloat(price)
+    const { price, name, mark, category, ...rest } = data
 
     // Realizar las transformaciones necesarias
     const transformData = {
@@ -32,14 +31,11 @@ export const StoreWineService = async (data: StoreWineServiceProps) => {
         mark: Number(mark),
         category: Number(category),
         stock: Number(data.stock),
-
+        price: formatFloat(price),
+         image: `wine_image_${data.name.toUpperCase()}.jpg`
     }
 
-    await StoreWineQuery({
-        ...transformData,
-        price: floatPrice,
-        image: `wine_image_${data.name.toUpperCase()}.jpg`
-    })
+    await StoreWineQuery(transformData)
 }
 
 export const WinesService = async (props: WinesServiceProps) => {
@@ -59,8 +55,8 @@ export const WinesService = async (props: WinesServiceProps) => {
         const Data = {
             ...rest,
             price: formatEuro(price),
-            mark: Mark.name,
-            category: Category.name
+            mark: Mark,
+            category: Category
         }
 
         allWines.push(Data)
@@ -85,4 +81,22 @@ export const WineImageService = async (props: WineImageServiceProps) => {
     }
 
     return filePath
+}
+
+export const UpdateWineService = async (props: any) => {
+    const { id, price, name, mark, category, description, stock } = props
+
+    const transfromData = {
+        id: parseInt(id),
+        name: name.toUpperCase(),
+        price: formatFloat(price),
+        markId: parseInt(mark),
+        categoryId: parseInt(category)
+    }
+
+    console.log(transfromData)
+
+    await UpdateWineQuery(transfromData)
+
+    return;
 }
