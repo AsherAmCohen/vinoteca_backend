@@ -22,17 +22,17 @@ const formatEuro = (num: number) => {
 }
 
 export const StoreWineService = async (data: StoreWineServiceProps) => {
-    const { price, name, mark, category, ...rest } = data
+    const { name, description, mark, category, price, stock } = data
 
     // Realizar las transformaciones necesarias
     const transformData = {
-        ...rest,
         name: name.toUpperCase(),
-        mark: Number(mark),
-        category: Number(category),
-        stock: Number(data.stock),
+        description: description,
+        markId: Number(mark),
+        categoryId: Number(category),
+        stock: Number(stock),
         price: formatFloat(price),
-         image: `wine_image_${data.name.toUpperCase()}.jpg`
+        image: `wine_image_${data.name.toUpperCase()}.jpg`
     }
 
     await StoreWineQuery(transformData)
@@ -84,17 +84,18 @@ export const WineImageService = async (props: WineImageServiceProps) => {
 }
 
 export const UpdateWineService = async (props: any) => {
-    const { id, price, name, mark, category, description, stock } = props
+    const { id, price, name, mark, category, description, stock, image } = props
 
     const transfromData = {
         id: parseInt(id),
         name: name.toUpperCase(),
-        price: formatFloat(price),
+        description: description,
         markId: parseInt(mark),
-        categoryId: parseInt(category)
+        categoryId: parseInt(category),
+        price: formatFloat(price),
+        stock: parseInt(stock),
+        image: image
     }
-
-    console.log(transfromData)
 
     await UpdateWineQuery(transfromData)
 

@@ -3,18 +3,23 @@ import { database } from "../../database/database"
 export const UpdateWineQuery = (props: any) => {
     return new Promise(async(resolve, reject) => {
         try {
-            const {id, name, price, markId, categoryId} = props
+            const {id, name, description, markId, categoryId, price, stock, image} = props
             await database.wine.update({
                 where: {
                     id
                 },
                 data: {
                     name,
-                    price,
+                    description,
                     markId,
-                    categoryId
+                    categoryId,
+                    price,
+                    stock,
+                    image
                 }
             })
+
+            resolve(true)
         } catch {
             reject(false)
         }

@@ -10,8 +10,8 @@ export interface StoreWineServiceProps {
 export interface StoreWineQueryProps {
     name: string;
     description: string;
-    mark: number
-    category: number;
+    markId: number
+    categoryId: number;
     price: number;
     stock: number;
     image: string;

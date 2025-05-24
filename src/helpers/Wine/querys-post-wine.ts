@@ -6,14 +6,14 @@ import { StoreWineQueryProps } from "../../interfaces/interfaces-wine";
 export const StoreWineQuery = (props: StoreWineQueryProps) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const { name, description, mark, category, price, stock, image } = props
+            const { name, description, markId, categoryId, price, stock, image } = props
 
             await database.wine.create({
                 data: {
                     name,
                     description,
-                    markId: mark,
-                    categoryId: category,
+                    markId,
+                    categoryId,
                     price,
                     stock,
                     image
