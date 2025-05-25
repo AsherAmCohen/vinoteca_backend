@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt';
 import { SignInServiceProps, SignUpServiceProps, UserInformationServiceProps } from "../interfaces/interfaces-user";
 import jwt from "jsonwebtoken"
 import { CreateShoppingCartQuery } from "../helpers/ShoppingCart/querys-post-shoppingCart";
-import { UpdateRoleQuery, VerifiedUserQuery } from "../helpers/User/querys-put-user";
+import { ChangePasswordQuery, UpdateRoleQuery, VerifiedUserQuery } from "../helpers/User/querys-put-user";
 import { DeleteUserQuery } from "../helpers/User/querys-delete-users";
 import crypto from 'crypto';
 import nodemailer from 'nodemailer';
@@ -183,7 +183,7 @@ export const SignInService = async (props: SignInServiceProps) => {
     }
 
     // Comprobar si esta eliminado
-    if(user.deletedAt) {
+    if (user.deletedAt) {
         throw new Error('Cuenta desactivada, si considera que fue un error contacte con el administrador')
     }
 
@@ -212,8 +212,8 @@ export const SignInService = async (props: SignInServiceProps) => {
         expiresIn: '1h'
     })
 
-    return ({token: token})
-    
+    return ({ token: token })
+
 }
 
 export const UserInformationService = async (props: UserInformationServiceProps) => {
@@ -320,7 +320,6 @@ export const DeleteUserService = async (props: any) => {
 export const VerifiedUserService = async (props: any) => {
     const { token } = props
 
-
     if (!token) {
         throw new Error('No se ha proporcionado un token')
     }
@@ -329,12 +328,12 @@ export const VerifiedUserService = async (props: any) => {
     const user: any = await UserInformationTokenQuery(token)
 
     // Comprobar si el usuario existe 
-    if(!user) {
+    if (!user) {
         throw new Error('El usuario no existe')
     }
 
     // Comprobar si el usuario no fue eliminado
-    if(user.deletedAt) {
+    if (user.deletedAt) {
         throw new Error('El usuario fue eliminado')
     }
 
@@ -347,6 +346,32 @@ export const VerifiedUserService = async (props: any) => {
     const role: any = await InfoRoleWhereName('USER')
 
     await VerifiedUserQuery(token, role.id)
+
+    return;
+}
+
+export const ChangePasswordService = async (props: any) => {
+    const { email, password, newPassword } = props;
+
+    // Validar que la contraseña sea la actual
+    const user: any = await CheckEmailQuery(email)
+
+    // Comparar contraseña
+    const passwordMatch = await bcrypt.compare(password, user.password)
+
+    if (!passwordMatch) {
+        throw new Error('La contraseña actual no es correcta')
+    }
+
+    // Hash la nueva contraseña
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    const transformData = {
+        email: email.toUpperCase(),
+        password: hashedPassword
+    }
+
+    await ChangePasswordQuery(transformData)
 
     return;
 }

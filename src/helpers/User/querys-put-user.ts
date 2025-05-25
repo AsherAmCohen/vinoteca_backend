@@ -1,9 +1,10 @@
+import { ChangePasswordController } from "../../controllers/controllers-user";
 import { database } from "../../database/database";
 
 export const UpdateRoleQuery = (props: any) => {
-    return new Promise(async(resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         try {
-            const {id, roleId} = props;
+            const { id, roleId } = props;
             await database.user.update({
                 where: {
                     id
@@ -20,7 +21,7 @@ export const UpdateRoleQuery = (props: any) => {
 }
 
 export const VerifiedUserQuery = (verificationToken: string, roleId: number) => {
-    return new Promise(async(resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         try {
             await database.user.update({
                 where: {
@@ -29,6 +30,26 @@ export const VerifiedUserQuery = (verificationToken: string, roleId: number) => 
                 data: {
                     verifiedAt: new Date(),
                     roleId
+                }
+            })
+
+            resolve(true)
+        } catch {
+            reject(false)
+        }
+    })
+}
+
+export const ChangePasswordQuery = (props: any) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const { email, password } = props
+            await database.user.update({
+                where: {
+                    email
+                },
+                data: {
+                    password
                 }
             })
 
