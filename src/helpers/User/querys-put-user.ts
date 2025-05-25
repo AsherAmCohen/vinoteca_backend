@@ -59,3 +59,27 @@ export const ChangePasswordQuery = (props: any) => {
         }
     })
 }
+
+export const ChangeUserDataQuery = (props: any) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const { email, name, lastname, phone, address } = props
+            await database.user.update({
+                where: {
+                    email
+                },
+                data: {
+                    name,
+                    lastname,
+                    phone,
+                    address
+                }
+            })
+            
+            resolve(true)
+        } catch (error){
+            console.log(error)
+            reject(false)
+        }
+    })
+}

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { ChangePasswordController, DeleteUserController, SignInController, SignUpController, UpdateRoleController, UserInformationController, UsersRegisterController, VerifiedUserController } from "../controllers/controllers-user";
+import { ChangePasswordController, ChangeUserDataController, DeleteUserController, SignInController, SignUpController, UpdateRoleController, UserInformationController, UsersRegisterController, VerifiedUserController } from "../controllers/controllers-user";
 import { authenticateToken } from "../middlewares/auth-middleware";
 import { authorize } from "../middlewares/permission-middleware";
 
@@ -13,5 +13,6 @@ router.put('/update/role', authenticateToken, authorize(['EDIT_USER']), UpdateRo
 router.delete('/delete', authenticateToken, authorize(['DELETE_USER']), DeleteUserController)
 router.put('/password', authenticateToken, ChangePasswordController)
 router.put('/verify', VerifiedUserController)
+router.put('/update', authenticateToken, ChangeUserDataController)
 
 export default router

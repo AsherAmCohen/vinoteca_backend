@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import { ChangePasswordService, DeleteUserService, SignInService, SignUpService, UpdateRoleService, UserInformationService, UsersRegisterService, VerifiedUserService } from "../services/services-user";
+import { ChangePasswordService, ChangeUserDataService, DeleteUserService, SignInService, SignUpService, UpdateRoleService, UserInformationService, UsersRegisterService, VerifiedUserService } from "../services/services-user";
 
 export const SignUpController: RequestHandler = async (request, response) => {
     try {
@@ -131,6 +131,22 @@ export const ChangePasswordController: RequestHandler = async (request, response
             .send({
                 status: 'error',
                 msg: error.message || 'No se ha cambiado la contraseña'
+            })
+    }
+}
+
+export const ChangeUserDataController: RequestHandler = async (request, response) => {
+    try {
+        await ChangeUserDataService(request.body)
+        response.json({
+            status: 'success',
+            msg: 'Se ha actualizado los datos'
+        })
+    } catch (error: any) {
+        response.status(500)
+            .send({
+                status: 'error',
+                msg: error.message || 'No se ha cambiado la información'
             })
     }
 }

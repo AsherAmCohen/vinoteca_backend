@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt';
 import { SignInServiceProps, SignUpServiceProps, UserInformationServiceProps } from "../interfaces/interfaces-user";
 import jwt from "jsonwebtoken"
 import { CreateShoppingCartQuery } from "../helpers/ShoppingCart/querys-post-shoppingCart";
-import { ChangePasswordQuery, UpdateRoleQuery, VerifiedUserQuery } from "../helpers/User/querys-put-user";
+import { ChangePasswordQuery, ChangeUserDataQuery, UpdateRoleQuery, VerifiedUserQuery } from "../helpers/User/querys-put-user";
 import { DeleteUserQuery } from "../helpers/User/querys-delete-users";
 import crypto from 'crypto';
 import nodemailer from 'nodemailer';
@@ -372,6 +372,25 @@ export const ChangePasswordService = async (props: any) => {
     }
 
     await ChangePasswordQuery(transformData)
+
+    return;
+}
+
+export const ChangeUserDataService = async (props: any) => {
+    const { name, lastname, address, phone, email } = props
+
+    // Dar formato al número telefonico
+    const phoneFormatted = parseInt(phone.replace(/\s+/g, ''));
+
+    const transformData = {
+        email: email,
+        name: name.toUpperCase(),
+        lastname: lastname.toUpperCase(),
+        phone: phoneFormatted,
+        address: address
+    }
+
+    await ChangeUserDataQuery(transformData)
 
     return;
 }
