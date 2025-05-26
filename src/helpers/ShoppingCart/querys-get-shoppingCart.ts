@@ -21,17 +21,42 @@ export const AmountProductShoppingCartQuery = (props: any) => {
 export const CountProductsShoppingCartQuery = (props: any) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const {id} = props
+            const {shoppingCartId} = props
 
             const shoppingCart = await database.wines_has_ShoppingCard.findMany({
                 where: {
-                    shoppingCartId: id
+                    shoppingCartId
                 }
             })
 
             resolve(shoppingCart)
         } catch {
             reject(false)
+        }
+    })
+}
+
+export const WinesShoppingCartQuery = (props: any) => {
+    return new Promise(async(resolve, reject) => {
+        try {
+            const {shoppingCartId} = props 
+
+            const wines = await database.wines_has_ShoppingCard.findMany({
+                where: {
+                    shoppingCartId
+                },
+                include: {
+                    wine: {
+                        include: {
+                            Mark: true
+                        }
+                    }
+                }
+            })
+
+            resolve(wines)
+        } catch {
+            reject([])
         }
     })
 }

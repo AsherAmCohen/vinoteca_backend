@@ -1,7 +1,8 @@
 import { DeleteProductoShoppingCartQuery } from "../helpers/ShoppingCart/querys-delete-shoppingCart";
-import { AmountProductShoppingCartQuery, CountProductsShoppingCartQuery } from "../helpers/ShoppingCart/querys-get-shoppingCart";
+import { AmountProductShoppingCartQuery, CountProductsShoppingCartQuery, WinesShoppingCartQuery } from "../helpers/ShoppingCart/querys-get-shoppingCart";
 import { UpdateAmountProductShoppingCartQuery } from "../helpers/ShoppingCart/querys-put-shoppingCart.ts";
 import { StockWineQuery } from "../helpers/Wine/querys-get-wine";
+import { formatEuro } from "./services-wine";
 
 export const AmountProductShoppingCartService = async (props: any) => {
     const { wineId, shoppingCartId } = props;
@@ -35,15 +36,16 @@ export const UpdateAmountProductShoppingCartService = async (props: any) => {
             await UpdateAmountProductShoppingCartQuery(transformData)
         }
     }
-        
+
     return;
 }
 
 export const CountProductsShoppingCartService = async (props: any) => {
-    const {shoppingCartId} = props;
+    const { shoppingCartId } = props;
+
 
     const transformData = {
-        id: parseInt(shoppingCartId)
+        shoppingCartId: parseInt(shoppingCartId)
     }
 
     const wines: any = await CountProductsShoppingCartQuery(transformData)
@@ -54,4 +56,34 @@ export const CountProductsShoppingCartService = async (props: any) => {
     })
 
     return count;
+}
+
+export const WinesShoppingCartService = async (props: any) => {
+    const { shoppingCartId } = props;
+
+    const transformData = {
+        shoppingCartId: parseInt(shoppingCartId)
+    }
+
+    const wines: any = await WinesShoppingCartQuery(transformData)
+
+    const total = formatEuro(wines.reduce((sum: number, wine: any) => sum + (wine.wine.price * wine.amount), 0))
+
+    const allWines: any = [];
+
+    wines.map((wine:any) => {
+        const Data = {
+            id: wine.wine.id,
+            name: wine.wine.name,
+            price: formatEuro(wine.wine.price),
+            mark: wine.wine.Mark.name,
+            image: wine.wine.image,
+            amount: wine.amount,
+            totalPrice: formatEuro((wine.wine.price * wine.amount))
+        }
+
+        allWines.push(Data)
+    })
+
+    return {wines: allWines, total: total};
 }

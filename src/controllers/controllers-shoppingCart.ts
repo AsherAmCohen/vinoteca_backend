@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import { AmountProductShoppingCartService, CountProductsShoppingCartService, UpdateAmountProductShoppingCartService } from "../services/services-shoppingCart";
+import { AmountProductShoppingCartService, CountProductsShoppingCartService, UpdateAmountProductShoppingCartService, WinesShoppingCartService } from "../services/services-shoppingCart";
 
 export const AmountProductShoppingCartController: RequestHandler = async (request, response) => {
     try {
@@ -34,6 +34,7 @@ export const UpdateAmountProductShoppingCartController: RequestHandler = async (
             })
     }
 }
+
 export const CountProductsShoppingCartController: RequestHandler = async (request, response) => {
     try {
         const count = await CountProductsShoppingCartService(request.query)
@@ -49,5 +50,22 @@ export const CountProductsShoppingCartController: RequestHandler = async (reques
                 status: 'error',
                 msg: error.message || 'Al obtener cantidad de productos en el carrito'
             })
+    }
+}
+
+export const WinesShoppingCartController: RequestHandler = async (request, response) => {
+    try {
+        const wines = await WinesShoppingCartService(request.query)
+        response.json({
+            status: 'success',
+            msg: 'Productos almacenados en el carrito',
+            data: wines
+        })
+    } catch (error: any) {
+        response.status(500)
+        .send({
+            status: 'error',
+            msg: error.message || 'Error al obtener vinos almacenado en el carrito'
+        })
     }
 }

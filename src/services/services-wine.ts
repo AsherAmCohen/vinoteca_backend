@@ -14,7 +14,7 @@ const formatFloat = (num: string) => {
     return parseFloat(format)
 }
 
-const formatEuro = (num: number) => {
+export const formatEuro = (num: number) => {
     return '€' + num
         .toFixed(2)                 // "1234.56"
         .replace('.', ',')         // "1234,56"
