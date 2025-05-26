@@ -74,16 +74,11 @@ export const WinesShoppingCartService = async (props: any) => {
     wines.map((wine:any) => {
         const Data = {
             id: wine.wine.id,
-            name: wine.wine.name,
-            price: formatEuro(wine.wine.price),
-            mark: wine.wine.Mark.name,
-            image: wine.wine.image,
             amount: wine.amount,
-            totalPrice: formatEuro((wine.wine.price * wine.amount))
         }
 
         allWines.push(Data)
     })
 
-    return {wines: allWines, total: total};
+    return allWines
 }

@@ -1,9 +1,9 @@
 import { RequestHandler } from "express";
-import { StoreWineService, UpdateWineService, WineImageService, WinesService } from "../services/services-wine";
+import { InfoWineService, StoreWineService, UpdateWineService, WineImageService, WinesService } from "../services/services-wine";
 
 export const StoreWineController: RequestHandler = async (request, response) => {
     try {
-        await StoreWineService(request.body)
+        await StoreWineService(request.body, request.file?.originalname)
         response.json({
             status: 'success',
             msg: 'Vino almacenado',
@@ -42,10 +42,10 @@ export const WineImageController: RequestHandler = async (request, response) => 
         response.sendFile(image)
     } catch (error: any) {
         response.status(500)
-        .send({
-            status: 'error',
-            msg: error.message || 'No se ha recuperado la imagen del vino'
-        })
+            .send({
+                status: 'error',
+                msg: error.message || 'No se ha recuperado la imagen del vino'
+            })
     }
 }
 
@@ -58,9 +58,26 @@ export const UpdateWineController: RequestHandler = async (request, response) =>
         })
     } catch (error: any) {
         response.status(500)
-        .send({
-            status: 'error',
-            msg: error.message || 'No se actualizo el vino'
+            .send({
+                status: 'error',
+                msg: error.message || 'No se actualizo el vino'
+            })
+    }
+}
+
+export const InfoWineController: RequestHandler = async (request, response) => {
+    try {
+        const wine = await InfoWineService(request.query)
+        response.json({
+            status: 'success',
+            msg: 'Información del vino',
+            data: wine
         })
+    } catch (error: any) {
+        response.status(500)
+            .send({
+                status: 'error',
+                msg: error.message || 'No se ha obtenido información del vino'
+            })
     }
 }

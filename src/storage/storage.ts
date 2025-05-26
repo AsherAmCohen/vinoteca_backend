@@ -11,6 +11,6 @@ export const storage = multer.diskStorage({
         cb(null, uploadPath)
     },
     filename: (request, file, cb) => {
-        cb(null, `wine_image_${request.body.name.toUpperCase()}.jpg`)
+        cb(null, file.originalname)
     }
 })

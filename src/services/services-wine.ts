@@ -1,5 +1,5 @@
 import path from "path";
-import { WinesQuery } from "../helpers/Wine/querys-get-wine";
+import { InfoWineQuery, WinesQuery } from "../helpers/Wine/querys-get-wine";
 import { StoreWineQuery } from "../helpers/Wine/querys-post-wine";
 import { StoreWineServiceProps, WineImageServiceProps, WinesServiceProps } from "../interfaces/interfaces-wine";
 import fs from 'fs';
@@ -21,7 +21,7 @@ export const formatEuro = (num: number) => {
         .replace(/\B(?=(\d{3})+(?!\d))/g, '.'); // "1.234,56"
 }
 
-export const StoreWineService = async (data: StoreWineServiceProps) => {
+export const StoreWineService = async (data: StoreWineServiceProps, image: any) => {
     const { name, description, mark, category, price, stock } = data
 
     // Realizar las transformaciones necesarias
@@ -32,7 +32,7 @@ export const StoreWineService = async (data: StoreWineServiceProps) => {
         categoryId: Number(category),
         stock: Number(stock),
         price: formatFloat(price),
-        image: `wine_image_${data.name.toUpperCase()}.jpg`
+        image: image
     }
 
     await StoreWineQuery(transformData)
@@ -100,4 +100,26 @@ export const UpdateWineService = async (props: any) => {
     await UpdateWineQuery(transfromData)
 
     return;
+}
+
+export const InfoWineService = async(props: any) => {
+    const {id, amount} = props
+
+    const transformData = {
+        id: parseInt(id)
+    }
+
+    const wine: any = await InfoWineQuery(transformData) 
+
+    const dataWine = {
+        id: wine.id,
+        name: wine.name,
+        price: wine.price,
+        image: wine.image,
+        mark: wine.Mark.name,
+        stock: wine.stock,
+        totalPrice: (wine.price * amount)
+    }
+
+    return dataWine
 }

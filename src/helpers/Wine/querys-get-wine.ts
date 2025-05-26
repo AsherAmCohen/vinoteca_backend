@@ -29,7 +29,7 @@ export const WinesQuery = (props: WinesQueryProps) => {
 }
 
 export const StockWineQuery = (id: number) => {
-    return new Promise(async(resolve, rejects) => {
+    return new Promise(async (resolve, rejects) => {
         try {
             const stock = await database.wine.findUnique({
                 where: {
@@ -40,6 +40,26 @@ export const StockWineQuery = (id: number) => {
             resolve(stock?.stock || 0)
         } catch {
             rejects(0)
+        }
+    })
+}
+
+export const InfoWineQuery = (props: any) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const { id } = props
+            const wine = await database.wine.findUnique({
+                where: {
+                    id
+                },
+                include: {
+                    Mark: true
+                }
+            })
+
+            resolve(wine)
+        } catch (error) {
+            reject(false)
         }
     })
 }
