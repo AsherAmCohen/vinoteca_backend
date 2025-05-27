@@ -86,7 +86,7 @@ export const WineImageService = async (props: WineImageServiceProps) => {
 export const UpdateWineService = async (props: any) => {
     const { id, price, name, mark, category, description, stock, image } = props
 
-    const transfromData = {
+    const transformData = {
         id: parseInt(id),
         name: name.toUpperCase(),
         description: description,
@@ -97,7 +97,7 @@ export const UpdateWineService = async (props: any) => {
         image: image
     }
 
-    await UpdateWineQuery(transfromData)
+    await UpdateWineQuery(transformData)
 
     return;
 }

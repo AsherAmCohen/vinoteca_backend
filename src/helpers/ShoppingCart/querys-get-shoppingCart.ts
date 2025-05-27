@@ -21,7 +21,7 @@ export const AmountProductShoppingCartQuery = (props: any) => {
 export const CountProductsShoppingCartQuery = (props: any) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const {shoppingCartId} = props
+            const { shoppingCartId } = props
 
             const shoppingCart = await database.wines_has_ShoppingCard.findMany({
                 where: {
@@ -37,9 +37,9 @@ export const CountProductsShoppingCartQuery = (props: any) => {
 }
 
 export const WinesShoppingCartQuery = (props: any) => {
-    return new Promise(async(resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         try {
-            const {shoppingCartId} = props 
+            const { shoppingCartId } = props
 
             const wines = await database.wines_has_ShoppingCard.findMany({
                 where: {
@@ -57,6 +57,51 @@ export const WinesShoppingCartQuery = (props: any) => {
             resolve(wines)
         } catch {
             reject([])
+        }
+    })
+}
+
+export const ShoppingCartPaymentAllQuery = (props: any) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const { email } = props
+
+            const orders = await database.user.findUnique({
+                where: {
+                    email
+                },
+                include: {
+                    shoppingCart: true
+                }
+            })
+
+            resolve(orders)
+        } catch {
+            reject([])
+        }
+    })
+}
+
+export const ShoppingCartUserQuery = (props: any) => {
+    return new Promise(async(resolve, reject) => {
+        try {
+            const {email} = props;
+            
+            const shoppingCart = await database.shoppingCart.findFirst({
+                where: {
+                    paymendAt: null,
+                    User: {
+                        email
+                    }
+                },
+                include: {
+                    User: true
+                }
+            })
+
+            resolve(shoppingCart)
+        } catch {
+            reject(false)
         }
     })
 }

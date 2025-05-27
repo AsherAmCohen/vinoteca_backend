@@ -10,7 +10,8 @@ export const CreateShoppingCartQuery = (userId: number) => {
             })
 
             resolve(true)
-        } catch {
+        } catch (error){
+            console.log(error)
             reject(false)
         }
     })

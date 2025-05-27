@@ -1,6 +1,8 @@
 import { DeleteProductoShoppingCartQuery } from "../helpers/ShoppingCart/querys-delete-shoppingCart";
-import { AmountProductShoppingCartQuery, CountProductsShoppingCartQuery, WinesShoppingCartQuery } from "../helpers/ShoppingCart/querys-get-shoppingCart";
-import { UpdateAmountProductShoppingCartQuery } from "../helpers/ShoppingCart/querys-put-shoppingCart.ts";
+import { AmountProductShoppingCartQuery, CountProductsShoppingCartQuery, ShoppingCartPaymentAllQuery, ShoppingCartUserQuery, WinesShoppingCartQuery } from "../helpers/ShoppingCart/querys-get-shoppingCart";
+import { CreateShoppingCartQuery } from "../helpers/ShoppingCart/querys-post-shoppingCart";
+import { PaymentShoppingCartQuery, UpdateAmountProductShoppingCartQuery } from "../helpers/ShoppingCart/querys-put-shoppingCart.ts";
+import { UserInformationQuery } from "../helpers/User/querys-get-user";
 import { StockWineQuery } from "../helpers/Wine/querys-get-wine";
 import { formatEuro } from "./services-wine";
 
@@ -71,7 +73,7 @@ export const WinesShoppingCartService = async (props: any) => {
 
     const allWines: any = [];
 
-    wines.map((wine:any) => {
+    wines.map((wine: any) => {
         const Data = {
             id: wine.wine.id,
             amount: wine.amount,
@@ -81,4 +83,54 @@ export const WinesShoppingCartService = async (props: any) => {
     })
 
     return allWines
+}
+
+export const PaymentShoppingCartService = async (props: any) => {
+    const { shoppingCart } = props
+
+    const transformData = {
+        id: shoppingCart
+    }
+
+    // Pagar el carrito actual
+    const cart: any = await PaymentShoppingCartQuery(transformData)
+
+    // Crear un nuevo carrito y agregarlo al usuario
+    await CreateShoppingCartQuery(parseInt(cart.userId))
+
+    return;
+}
+
+export const ShoppingCartPaymentAllService = async (props: any) => {
+    const { email } = props
+
+    const transformData = {
+        email: email.toUpperCase()
+    }
+
+    const orders: any = await ShoppingCartPaymentAllQuery(transformData)
+
+    const { shoppingCart } = orders
+
+    console.log(shoppingCart)
+
+    const allOrders = []
+
+    shoppingCart.map((cart: any) => {
+
+    })
+
+    return
+}
+
+export const ShoppingCartUserService = async (props: any) => {
+    const { email } = props;
+
+    const transformData = {
+        email: email.toUpperCase()
+    }
+
+    const shoppingCart: any = await ShoppingCartUserQuery(transformData)
+
+    return shoppingCart.id;
 }

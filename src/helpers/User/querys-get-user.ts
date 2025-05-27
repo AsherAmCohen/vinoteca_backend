@@ -10,7 +10,6 @@ export const CheckEmailQuery = (email: string) => {
                     email,
                 },
                 include: {
-                    shoppingCart: true,
                     Role: {
                         include: {
                             permissions: {

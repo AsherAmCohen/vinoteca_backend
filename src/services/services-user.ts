@@ -207,7 +207,6 @@ export const SignInService = async (props: SignInServiceProps) => {
         phone: user.phone,
         role: role,
         permissions: permissions,
-        shoppingCart: user.shoppingCart.id
     }, SECRET_KEY, {
         expiresIn: '1h'
     })

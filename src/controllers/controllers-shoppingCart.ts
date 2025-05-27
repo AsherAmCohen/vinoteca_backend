@@ -1,5 +1,6 @@
 import { RequestHandler } from "express";
-import { AmountProductShoppingCartService, CountProductsShoppingCartService, UpdateAmountProductShoppingCartService, WinesShoppingCartService } from "../services/services-shoppingCart";
+import { AmountProductShoppingCartService, CountProductsShoppingCartService, PaymentShoppingCartService, ShoppingCartPaymentAllService, ShoppingCartUserService, UpdateAmountProductShoppingCartService, WinesShoppingCartService } from "../services/services-shoppingCart";
+import { request } from "http";
 
 export const AmountProductShoppingCartController: RequestHandler = async (request, response) => {
     try {
@@ -66,6 +67,55 @@ export const WinesShoppingCartController: RequestHandler = async (request, respo
         .send({
             status: 'error',
             msg: error.message || 'Error al obtener vinos almacenado en el carrito'
+        })
+    }
+}
+
+export const PaymentShoppingCartController: RequestHandler = async (request, response) => {
+    try {
+        await PaymentShoppingCartService(request.body)
+        response.json({
+            status: 'success',
+            msg: 'Carrito pagato',
+        })
+    } catch (error: any) {
+        response.status(500)
+        .send({
+            status: 'error',
+            msg: error.message || 'Error al realizar la compra de los productos'
+        })
+    }
+}
+
+export const ShoppingCartPaymentAllController: RequestHandler = async (request, response) => {
+    try {
+        await ShoppingCartPaymentAllService(request.query)
+        response.json({
+            status: 'success',
+            msg: 'Compras Obtenidas'
+        })
+    } catch (error: any) {
+        response.status(500)
+        .send({
+            status: 'error',
+            msg: error.message || 'Error al obtener las compras'
+        })
+    }
+}
+
+export const ShoppingCartUserController: RequestHandler = async(request, response) => {
+    try {
+        const shoppingCart = await ShoppingCartUserService(request.query)
+        response.json({
+            status: 'success',
+            msg: 'Carrito obtenido',
+            data: shoppingCart
+        })
+    } catch (error: any) {
+        response.status(500)
+        .send({
+            status: 'error',
+            msg: error.message || 'Error al obtener el carrito libre del usuario'
         })
     }
 }
