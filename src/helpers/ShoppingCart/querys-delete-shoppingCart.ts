@@ -6,11 +6,13 @@ export const DeleteProductoShoppingCartQuery = (props: any) => {
             const { wineId, shoppingCartId } = props;
             await database.wines_has_ShoppingCard.delete({
                 where: {
-                    wineId,
-                    shoppingCartId
+                    wineId_shoppingCartId: {
+                        wineId,
+                        shoppingCartId
+                    }
                 }
             })
-            
+
             resolve(true)
         } catch {
             reject(false)

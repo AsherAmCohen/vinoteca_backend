@@ -25,3 +25,23 @@ export const UpdateWineQuery = (props: any) => {
         }
     })
 }
+
+export const PaymentWine = (props: any) => {
+    return new Promise(async(resolve, reject) => {
+        try {
+            const {id, stock, sale} = props
+
+            await database.wine.update({
+                where: {
+                    id
+                },
+                data: {
+                    stock,
+                    sale
+                }
+            })
+        } catch {
+            reject(false)
+        }
+    })
+}

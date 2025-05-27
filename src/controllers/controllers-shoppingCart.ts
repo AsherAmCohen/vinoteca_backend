@@ -1,6 +1,5 @@
 import { RequestHandler } from "express";
 import { AmountProductShoppingCartService, CountProductsShoppingCartService, PaymentShoppingCartService, ShoppingCartPaymentAllService, ShoppingCartUserService, UpdateAmountProductShoppingCartService, WinesShoppingCartService } from "../services/services-shoppingCart";
-import { request } from "http";
 
 export const AmountProductShoppingCartController: RequestHandler = async (request, response) => {
     try {
@@ -73,10 +72,11 @@ export const WinesShoppingCartController: RequestHandler = async (request, respo
 
 export const PaymentShoppingCartController: RequestHandler = async (request, response) => {
     try {
-        await PaymentShoppingCartService(request.body)
+        const cart = await PaymentShoppingCartService(request.body)
         response.json({
             status: 'success',
             msg: 'Carrito pagato',
+            data: cart
         })
     } catch (error: any) {
         response.status(500)
@@ -89,10 +89,11 @@ export const PaymentShoppingCartController: RequestHandler = async (request, res
 
 export const ShoppingCartPaymentAllController: RequestHandler = async (request, response) => {
     try {
-        await ShoppingCartPaymentAllService(request.query)
+        const orders = await ShoppingCartPaymentAllService(request.query)
         response.json({
             status: 'success',
-            msg: 'Compras Obtenidas'
+            msg: 'Compras Obtenidas',
+            data: orders 
         })
     } catch (error: any) {
         response.status(500)

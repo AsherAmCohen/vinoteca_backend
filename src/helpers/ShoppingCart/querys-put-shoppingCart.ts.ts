@@ -4,11 +4,13 @@ export const UpdateAmountProductShoppingCartQuery = (props: any) => {
     return new Promise(async (resolve, reject) => {
         try {
             const { wineId, shoppingCartId, amount } = props;
-            console.log(props)
+            
             await database.wines_has_ShoppingCard.upsert({
                 where: {
-                    wineId,
-                    shoppingCartId
+                    wineId_shoppingCartId: {
+                        wineId,
+                        shoppingCartId
+                    }
                 },
                 create: {
                     wineId,
@@ -29,13 +31,16 @@ export const UpdateAmountProductShoppingCartQuery = (props: any) => {
 }
 
 export const PaymentShoppingCartQuery = (props: any) => {
-    return new Promise(async(resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         try {
-            const {id} = props
-            
+            const { id } = props
+
             const cart = await database.shoppingCart.update({
                 where: {
                     id
+                },
+                include: {
+                    wines: true
                 },
                 data: {
                     paymendAt: new Date()
@@ -44,6 +49,7 @@ export const PaymentShoppingCartQuery = (props: any) => {
 
             resolve(cart)
         } catch (error) {
+            console.log(error)
             reject(false)
         }
     })

@@ -2,9 +2,8 @@ import { DeleteProductoShoppingCartQuery } from "../helpers/ShoppingCart/querys-
 import { AmountProductShoppingCartQuery, CountProductsShoppingCartQuery, ShoppingCartPaymentAllQuery, ShoppingCartUserQuery, WinesShoppingCartQuery } from "../helpers/ShoppingCart/querys-get-shoppingCart";
 import { CreateShoppingCartQuery } from "../helpers/ShoppingCart/querys-post-shoppingCart";
 import { PaymentShoppingCartQuery, UpdateAmountProductShoppingCartQuery } from "../helpers/ShoppingCart/querys-put-shoppingCart.ts";
-import { UserInformationQuery } from "../helpers/User/querys-get-user";
-import { StockWineQuery } from "../helpers/Wine/querys-get-wine";
-import { formatEuro } from "./services-wine";
+import { InfoWineQuery, StockWineQuery } from "../helpers/Wine/querys-get-wine";
+import { PaymentWine } from "../helpers/Wine/querys-put-wines";
 
 export const AmountProductShoppingCartService = async (props: any) => {
     const { wineId, shoppingCartId } = props;
@@ -45,7 +44,6 @@ export const UpdateAmountProductShoppingCartService = async (props: any) => {
 export const CountProductsShoppingCartService = async (props: any) => {
     const { shoppingCartId } = props;
 
-
     const transformData = {
         shoppingCartId: parseInt(shoppingCartId)
     }
@@ -69,8 +67,6 @@ export const WinesShoppingCartService = async (props: any) => {
 
     const wines: any = await WinesShoppingCartQuery(transformData)
 
-    const total = formatEuro(wines.reduce((sum: number, wine: any) => sum + (wine.wine.price * wine.amount), 0))
-
     const allWines: any = [];
 
     wines.map((wine: any) => {
@@ -86,19 +82,42 @@ export const WinesShoppingCartService = async (props: any) => {
 }
 
 export const PaymentShoppingCartService = async (props: any) => {
-    const { shoppingCart } = props
+    const { shoppingCartId } = props
 
     const transformData = {
-        id: shoppingCart
+        id: shoppingCartId
     }
 
     // Pagar el carrito actual
     const cart: any = await PaymentShoppingCartQuery(transformData)
 
-    // Crear un nuevo carrito y agregarlo al usuario
-    await CreateShoppingCartQuery(parseInt(cart.userId))
+    // Aumentar las ventas y reducir el stock de los vinos ventidos
+    const { wines } = cart
 
-    return;
+    wines.map(async (wine: any) => {
+        const infoWine: any = await InfoWineQuery({ id: wine.wineId })
+
+        if (wine.amount > infoWine.stock) {
+            throw new Error('No hay productos suficientes')
+        }
+
+        if(infoWine.stock === 0) {
+            throw new Error('Ya no hay productos')
+        }
+
+        const transformData = {
+            id: infoWine.id,
+            stock: parseInt(infoWine.stock) - wine.amount,
+            sale: parseInt(infoWine.sale) + wine.amount
+        }
+
+        await PaymentWine(transformData)
+    })
+
+    // Crear un nuevo carrito y agregarlo al usuario
+    const newCart: any = await CreateShoppingCartQuery(parseInt(cart.userId))
+
+    return newCart.id;
 }
 
 export const ShoppingCartPaymentAllService = async (props: any) => {
@@ -110,17 +129,7 @@ export const ShoppingCartPaymentAllService = async (props: any) => {
 
     const orders: any = await ShoppingCartPaymentAllQuery(transformData)
 
-    const { shoppingCart } = orders
-
-    console.log(shoppingCart)
-
-    const allOrders = []
-
-    shoppingCart.map((cart: any) => {
-
-    })
-
-    return
+    return orders
 }
 
 export const ShoppingCartUserService = async (props: any) => {

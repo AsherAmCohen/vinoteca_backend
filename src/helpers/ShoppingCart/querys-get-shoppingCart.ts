@@ -6,8 +6,10 @@ export const AmountProductShoppingCartQuery = (props: any) => {
             const { wineId, shoppingCartId } = props
             const product = await database.wines_has_ShoppingCard.findUnique({
                 where: {
-                    wineId,
-                    shoppingCartId
+                    wineId_shoppingCartId: {
+                        wineId,
+                        shoppingCartId
+                    }
                 }
             })
 
@@ -66,12 +68,21 @@ export const ShoppingCartPaymentAllQuery = (props: any) => {
         try {
             const { email } = props
 
-            const orders = await database.user.findUnique({
+            const orders = await database.shoppingCart.findMany({
                 where: {
-                    email
+                    User: {
+                        email
+                    },
+                    paymendAt: {
+                        not: null
+                    }
                 },
                 include: {
-                    shoppingCart: true
+                    wines: {
+                        include: {
+                            wine: true
+                        }
+                    }
                 }
             })
 
@@ -83,10 +94,10 @@ export const ShoppingCartPaymentAllQuery = (props: any) => {
 }
 
 export const ShoppingCartUserQuery = (props: any) => {
-    return new Promise(async(resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         try {
-            const {email} = props;
-            
+            const { email } = props;
+
             const shoppingCart = await database.shoppingCart.findFirst({
                 where: {
                     paymendAt: null,
