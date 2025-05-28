@@ -2,6 +2,8 @@ import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient()
+import dotenv from 'dotenv';
+dotenv.config(); // Carga las variables de entorno
 
 async function main() {
     // 1. Crear permisos
@@ -30,7 +32,9 @@ async function main() {
             // Roles
             { name: 'VIEW_ROLE', description: 'Ver la lista de roles' },
             { name: 'ADD_ROLE', description: 'Agregar roles' },
-            { name: 'EDIT_ROLE', description: 'Modificar permisos de rol' }
+            { name: 'EDIT_ROLE', description: 'Modificar permisos de rol' },
+            // Pagos
+            { name: 'PAYMENT', description: 'Permite realizar la compra del carrito' }
         ],
         skipDuplicates: true
     })
@@ -91,7 +95,7 @@ async function main() {
     const userPermissions = await prisma.permission.findMany({
         where: {
             name: {
-                in: ['VIEW_PROFILE', 'VIEW_ORDER']
+                in: ['VIEW_PROFILE', 'VIEW_ORDER', 'PAYMENT']
             }
         }
     })
@@ -151,30 +155,13 @@ async function main() {
             name: 'ADMINISTRADOR',
             lastname: 'PRINCIPAL',
             gender: 'INDEFINIDO',
-            email: 'ADMIN@ADMIN.COM',
+            email: `${process.env.EMAIL_ADMIN?.toUpperCase() || 'ADMIN@ADMIN.COM'}`,
             address: 'CALLE DEL OLVIDO',
             phone: 123456789,
             birthdate: new Date('1999-09-14'),
-            password: await bcrypt.hash('SG9sYU11bmRv*', 10),
+            password: await bcrypt.hash(`${process.env.PASSWORD_ADMIN}`, 10),
             verifiedAt: new Date(),
             roleId: adminRole.id,
-        }
-    })
-
-    // 12. Agregar usuario de prueba
-    await prisma.user.upsert({
-        where: { email: 'PABLO@PABLO.COM' },
-        update: {},
-        create: {
-            name: 'PABLO',
-            lastname: 'VAZQUEZ REYES',
-            gender: 'MASCULINO',
-            email: 'PABLO@PABLO.COM',
-            address: 'NUEVO LEON #1306',
-            phone: 226104835,
-            birthdate: new Date('1999-09-14'),
-            password: await bcrypt.hash('SG9sYU11bmRv*', 10),
-            roleId: userRole.id,
         }
     })
 
@@ -182,12 +169,6 @@ async function main() {
     await prisma.shoppingCart.create({
         data: {
             userId: adminRole.id
-        }
-    })
-
-    await prisma.shoppingCart.create({
-        data: {
-            userId: userRole.id
         }
     })
 }

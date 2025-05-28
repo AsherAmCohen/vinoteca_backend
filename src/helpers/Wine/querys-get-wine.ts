@@ -28,6 +28,43 @@ export const WinesQuery = (props: WinesQueryProps) => {
     })
 }
 
+export const WinesInStockQuery = (props: any) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const { skip, take } = props
+
+            const wines = await database.wine.findMany({
+                where: {
+                    stock: {
+                        not: 0
+                    }
+                },
+                orderBy: {
+                    id: 'desc'
+                },
+                include: {
+                    Mark: true,
+                    Category: true
+                },
+                skip,
+                take
+            })
+
+            const count = await database.wine.count({
+                where: {
+                    stock: {
+                        not: 0
+                    }
+                },
+            })
+
+            resolve({ wines: wines, count: count })
+        } catch {
+            reject([])
+        }
+    })
+}
+
 export const StockWineQuery = (id: number) => {
     return new Promise(async (resolve, rejects) => {
         try {

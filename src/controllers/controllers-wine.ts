@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import { InfoWineService, StoreWineService, UpdateWineService, WineImageService, WinesService } from "../services/services-wine";
+import { InfoWineService, StoreWineService, UpdateWineService, WineImageService, WinesInStockService, WinesService } from "../services/services-wine";
 
 export const StoreWineController: RequestHandler = async (request, response) => {
     try {
@@ -32,6 +32,23 @@ export const WinesController: RequestHandler = async (request, response) => {
             .send({
                 status: 'error',
                 msg: error.message || 'No se han obtenidos los vinos almacenados'
+            })
+    }
+}
+
+export const WinesInStockController: RequestHandler = async (request, response) => {
+    try {
+        const wines = await WinesInStockService(request.query)
+        response.json({
+            status: 'success',
+            msg: 'Lista de vinos en stock',
+            data: wines
+        })
+    } catch (error: any) {
+        response.status(500)
+            .send({
+                sttus: 'error',
+                msg: error.message || 'No se han obtenido los vinos con stock'
             })
     }
 }

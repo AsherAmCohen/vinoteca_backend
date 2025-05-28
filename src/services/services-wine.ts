@@ -1,9 +1,10 @@
 import path from "path";
-import { InfoWineQuery, WinesQuery } from "../helpers/Wine/querys-get-wine";
+import { InfoWineQuery, WinesInStockQuery, WinesQuery } from "../helpers/Wine/querys-get-wine";
 import { StoreWineQuery } from "../helpers/Wine/querys-post-wine";
 import { StoreWineServiceProps, WineImageServiceProps, WinesServiceProps } from "../interfaces/interfaces-wine";
 import fs from 'fs';
 import { UpdateWineQuery } from "../helpers/Wine/querys-put-wines";
+import { skip } from "@prisma/client/runtime/library";
 
 const formatFloat = (num: string) => {
     const format = num
@@ -65,6 +66,34 @@ export const WinesService = async (props: WinesServiceProps) => {
     return ({ wines: allWines, count: count })
 }
 
+export const WinesInStockService = async (props: any) => {
+    const { page, rowsPerPage } = props
+
+    const transformData: any = {
+        skip: (Number(rowsPerPage) * (Number(page)) - Number(rowsPerPage)),
+        take: Number(rowsPerPage)
+    }
+
+    const { wines, count }: any = await WinesInStockQuery(transformData)
+
+    const allWines: any = [];
+
+    wines.map((wine: any) => {
+        const { price, Mark, markId, Category, categoryId, ...rest } = wine
+        const Data = {
+            ...rest,
+            price: formatEuro(price),
+            mark: Mark,
+            category: Category
+        }
+
+        allWines.push(Data)
+    })
+
+    return ({ wines: allWines, count: count })
+
+}
+
 export const WineImageService = async (props: WineImageServiceProps) => {
     const { image } = props
 
@@ -102,14 +131,14 @@ export const UpdateWineService = async (props: any) => {
     return;
 }
 
-export const InfoWineService = async(props: any) => {
-    const {id, amount} = props
+export const InfoWineService = async (props: any) => {
+    const { id, amount } = props
 
     const transformData = {
         id: parseInt(id)
     }
 
-    const wine: any = await InfoWineQuery(transformData) 
+    const wine: any = await InfoWineQuery(transformData)
 
     const dataWine = {
         id: wine.id,

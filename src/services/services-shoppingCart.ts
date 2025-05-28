@@ -121,10 +121,12 @@ export const PaymentShoppingCartService = async (props: any) => {
 }
 
 export const ShoppingCartPaymentAllService = async (props: any) => {
-    const { email } = props
+    const { email, page, rowsPerPage } = props
 
     const transformData = {
-        email: email.toUpperCase()
+        email: email.toUpperCase(),
+        skip: (Number(rowsPerPage) * (Number(page) + 1) - Number(rowsPerPage)),
+        take: Number(rowsPerPage)
     }
 
     const orders: any = await ShoppingCartPaymentAllQuery(transformData)

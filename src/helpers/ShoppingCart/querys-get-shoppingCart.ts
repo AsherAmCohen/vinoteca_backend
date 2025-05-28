@@ -66,7 +66,7 @@ export const WinesShoppingCartQuery = (props: any) => {
 export const ShoppingCartPaymentAllQuery = (props: any) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const { email } = props
+            const { email, skip, take } = props
 
             const orders = await database.shoppingCart.findMany({
                 where: {
@@ -80,13 +80,33 @@ export const ShoppingCartPaymentAllQuery = (props: any) => {
                 include: {
                     wines: {
                         include: {
-                            wine: true
+                            wine: {
+                                include: {
+                                    Mark: true
+                                }
+                            }
                         }
                     }
-                }
+                },
+                orderBy: {
+                    id: 'desc'
+                },
+                skip,
+                take
             })
 
-            resolve(orders)
+            const count = await database.shoppingCart.count({
+                where: {
+                    User: {
+                        email
+                    },
+                    paymendAt: {
+                        not: null
+                    }
+                },
+            })
+
+            resolve({orders: orders, count: count})
         } catch {
             reject([])
         }
