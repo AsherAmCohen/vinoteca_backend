@@ -18,7 +18,6 @@ model User {
   birthdate         DateTime       @db.Date
   password          String         @db.Text
   verificationToken String?        @unique
-  tokenExpires      DateTime?
   createdAt         DateTime       @default(now()) @db.DateTime(0)
   verifiedAt        DateTime?      @db.DateTime(0)
   updatedAt         DateTime?      @db.DateTime(0)

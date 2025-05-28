@@ -19,7 +19,6 @@ export interface SignUpQueryProps {
     birthdate: Date;
     password: string;
     verificationToken: string;
-    tokenExpires: Date;
     roleId: number
 }
 

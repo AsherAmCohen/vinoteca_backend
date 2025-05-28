@@ -136,9 +136,6 @@ export const SignUpService = async (props: SignUpServiceProps) => {
     // Creación de token para verificar la cuenta
     const token = generateVerificationToken()
 
-    // Crear fecha de expiración del token de 1 hora
-    const expires = new Date(Date.now() + 1000 * 60 * 60)
-
     // Obtener el rol de invitado
     const role: any = await InfoRoleWhereName('GUEST')
 
@@ -151,7 +148,6 @@ export const SignUpService = async (props: SignUpServiceProps) => {
         name: name.toUpperCase(),
         lastname: lastname.toUpperCase(),
         verificationToken: token,
-        tokenExpires: expires,
         phone: phoneFormatted,
         birthdate: birthDateFormatted,
         password: hashedPassword,
