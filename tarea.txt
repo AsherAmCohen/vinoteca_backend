@@ -1,0 +1,15 @@
+Hacer controladores 
+- Roles (Falta READ) LISTOOOOOO
+- Permisos (Falta READ)LISTOOOO
+- Marca (Colocar el nombre de las funciones en ingles, Falta READ) LISTOOOO
+- Producto (Listo) LISTOOOO
+- ShoppingCard (FALTA READ) LISTOOOOO
+
+05/04/2025
+Agregar READ, UPDATE y DELETE a cada uno de los controladores
+- User LISTOOOOOO
+- Role LISTOOOOOO
+- Permission LISTOOOOOO
+- Mark LISTOOOO
+- Product LISTOOOOOO
+- ShoppingCard LISTOOOOOO

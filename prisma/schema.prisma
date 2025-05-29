@@ -1,0 +1,110 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                Int            @id @default(autoincrement())
+  name              String         @db.VarChar(45)
+  lastname          String         @db.VarChar(45)
+  gender            String         @db.VarChar(45)
+  email             String         @unique @db.VarChar(45)
+  address           String         @db.VarChar(100)
+  phone             Int
+  birthdate         DateTime       @db.Date
+  password          String         @db.Text
+  verificationToken String?        @unique
+  createdAt         DateTime       @default(now()) @db.DateTime(0)
+  verifiedAt        DateTime?      @db.DateTime(0)
+  updatedAt         DateTime?      @db.DateTime(0)
+  deletedAt         DateTime?      @db.DateTime(0)
+  // Permisos
+  Role              Role           @relation(fields: [roleId], references: [id])
+  roleId            Int
+  // Carrito de compras
+  shoppingCart      ShoppingCart[]
+}
+
+model Wine {
+  id           Int                      @id @default(autoincrement())
+  name         String                   @db.VarChar(100)
+  description  String                   @db.VarChar(200)
+  price        Decimal                  @db.Decimal(10, 2)
+  stock        Float
+  sale         Int                      @default(0)
+  image        String                   @db.VarChar(100)
+  // Marca
+  Mark         Mark?                    @relation(fields: [markId], references: [id])
+  markId       Int
+  // Categoria
+  Category     Category?                @relation(fields: [categoryId], references: [id])
+  categoryId   Int?
+  // Producto
+  shoppingCard Wines_has_ShoppingCard[]
+}
+
+model Mark {
+  id          Int    @id @default(autoincrement())
+  name        String @unique @db.VarChar(25)
+  description String @db.Text
+  wines       Wine[]
+}
+
+model Category {
+  id          Int    @id @default(autoincrement())
+  name        String @unique @db.VarChar(25)
+  description String @db.Text
+  wines       Wine[]
+}
+
+model Wines_has_ShoppingCard {
+  // Vinos
+  wine           Wine?         @relation(fields: [wineId], references: [id])
+  wineId         Int           
+  // Cantidad de vinos
+  amount         Int           @default(1)
+  // Carrito al que pertenece
+  ShoppingCart   ShoppingCart? @relation(fields: [shoppingCartId], references: [id])
+  shoppingCartId Int
+
+  @@id([wineId, shoppingCartId])
+}
+
+model ShoppingCart {
+  id        Int                      @id @default(autoincrement())
+  // Productos
+  wines     Wines_has_ShoppingCard[]
+  // Usuario
+  User      User?                    @relation(fields: [userId], references: [id])
+  userId    Int?                     
+  // Fecha de pago
+  paymendAt DateTime?
+}
+
+model Role {
+  id          Int                   @id @default(autoincrement())
+  name        String                @unique @db.VarChar(25)
+  description String                @db.Text
+  users       User[]
+  permissions Permission_has_Role[]
+}
+
+model Permission {
+  id          Int                   @id @default(autoincrement())
+  name        String                @unique @db.VarChar(25)
+  description String                @db.Text
+  roles       Permission_has_Role[]
+}
+
+model Permission_has_Role {
+  Permission   Permission? @relation(fields: [permissionId], references: [id])
+  permissionId Int
+  Role         Role?       @relation(fields: [roleId], references: [id])
+  roleId       Int
+
+  @@id([roleId, permissionId])
+}
